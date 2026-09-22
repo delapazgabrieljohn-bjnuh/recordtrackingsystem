@@ -2,40 +2,41 @@
 include("./connection/config.php");
 include("./helpers/SystemOperators.php");
 
-$con = connection();
-$so = new SystemOperators();
+$con = connection();$so = new SystemOperators();
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])){
-    $uid = $so->encrypt(filter_input(INPUT_POST,'uid', FILTER_SANITIZE_SPECIAL_CHARS));
-    $fname = $so->encrypt(filter_input(INPUT_POST,'firstname', FILTER_SANITIZE_SPECIAL_CHARS));
-    $lname = $so->encrypt(filter_input(INPUT_POST,'lastname', FILTER_SANITIZE_SPECIAL_CHARS));
-    $address = $so->encrypt(filter_input(INPUT_POST,'address', FILTER_SANITIZE_SPECIAL_CHARS));
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnRegister'])){
+    $raw_file_no = "DOC-" . date("Ymd") . "-" . strtoupper($so->randomStringGenerator(8));$file_no     = $so->encrypt($raw_file_no);
 
-    $select_query = "SELECT * FROM `users` WHERE `user_id` = ?";
-    $select_stmt = $con->prepare($select_query);
-    $select_stmt->bind_param('s', $uid);
+    $student_no =$so->encrypt(filter_input(INPUT_POST, 'student_no', FILTER_SANITIZE_SPECIAL_CHARS));
+    $fname      =$so->encrypt(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS));
+    $lname      =$so->encrypt(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS));
+    $mname      =$so->encrypt(filter_input(INPUT_POST, 'middlename', FILTER_SANITIZE_SPECIAL_CHARS));
+    $year_level =$so->encrypt(filter_input(INPUT_POST, 'year_level', FILTER_SANITIZE_SPECIAL_CHARS));
+    $program    =$so->encrypt(filter_input(INPUT_POST, 'program', FILTER_SANITIZE_SPECIAL_CHARS));
+    $email      =$so->encrypt(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
+    $doc_type   =$so->encrypt(filter_input(INPUT_POST, 'doc_type', FILTER_SANITIZE_SPECIAL_CHARS));
+    $purpose    =$so->encrypt(filter_input(INPUT_POST, 'purpose', FILTER_SANITIZE_SPECIAL_CHARS));
+    
+    $status     =$so->encrypt('Pending');
 
-    if($select_stmt->execute()){
-        $result = $select_stmt->get_result();
-        if($result->num_rows > 0){
-            echo "<script> alert('User exist');</script>";
-        }else{
-            $insert_query = 'INSERT INTO `users` (`user_id`,`firstname`, `lastname`, `address`) VALUES (?, ?, ?, ?)';
-            $inset_stmt = $con->prepare($insert_query);
-            $inset_stmt->bind_param('ssss',$uid,$fname,$lname,$address);
-            try{
-                $inset_stmt->execute();
-                echo "<script> alert('User information inserted successfully!');
-                                window.location='index.php';
-                </script>";
-            }catch(mysqli_sql_exception $e){
-                echo $e->getMessage();
-            }
-        }
-    }else{
-        echo "Failed to execute";
-        $select_stmt->close();
+    $insert_query = "INSERT INTO `document_requests` 
+                    (`file_no`, `student_no`, `firstname`, `lastname`, `middlename`, `year_level`, `program`, `email`, `doc_type`, `purpose`, `status`) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_stmt = $con->prepare($insert_query);
+    $insert_stmt->bind_param('sssssssssss',$file_no, $student_no,$fname, $lname,$mname, $year_level,$program, $email,$doc_type, $purpose,$status);
+    
+    try {
+        $insert_stmt->execute();
+        // Prompt student with their newly generated File/Tracking Number
+        echo "<script> 
+                alert('Request submitted successfully!\\nYour Reference/File No. is: " . $raw_file_no . "\\nPlease save this number for tracking.');
+                window.location='index.php';
+              </script>";
+    } catch(mysqli_sql_exception $e) {
+        echo "Database Error: " . $e->getMessage();
     }
+    
+    $insert_stmt->close();
 }
 ?>
 
@@ -44,63 +45,104 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Document Request Form</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <h2>Student Document Request Form</h2>
+    
     <form action="" method="post">
         <div class="form-fields">
             <div class="form-items">
-                <label for="">Enter User ID:</label>
-                <input type="text" name="uid" required placeholder="ID:001">
+                <label>Student No.:</label>
+                <input type="text" name="student_no" required placeholder="2026-0001">
             </div>
             <div class="form-items">
-                <label for="">Enter Firstname:</label>
-                <input type="text" name="firstname" required>
+                <label>Last Name:</label>
+                <input type="text" name="lastname" required placeholder="Dela Cruz  ">
             </div>
             <div class="form-items">
-                <label for="">Enter Lastname:</label>
-                <input type="text" name="lastname" required>
+                <label>First Name:</label>
+                <input type="text" name="firstname" required placeholder="Juan">
             </div>
             <div class="form-items">
-                <label for="">Enter Address:</label>
-                <input type="text" name="address" required>
+                <label>Middle Name:</label>
+                <input type="text" name="middlename" placeholder="Santos / Leave a blank if none">
             </div>
-            <button type="submit" name="btnSubmit"> Submit</button>
+            <div class="form-items">
+                <label>Year Level:</label>
+                <input type="text" name="year_level" placeholder="3rd Year, 4th Year, etc., N/A if not applicable">
+            </div>
+            <div class="form-items">
+                <label>Degree Program / Course:</label>
+                <input type="text" name="program" required placeholder="BSIT, BSN, BSBA, etc., "N/A" if not applicable">
+            </div>
+            <div class="form-items">
+                <label>Email:</label>
+                <input type="email" name="email" required placeholder="example@school.edu">
+            </div>
+
+            <hr>
+
+            <div class="form-items">
+                <label>Record Requested Type:</label>
+                <select name="doc_type" required>
+                    <option value="Cert. of Enrollment">Cert. of Enrollment</option>
+                    <option value="Cert. of Registration">Cert. of Registration</option>
+                    <option value="Form 137 / Transcript">Form 137 / Transcript</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Health Record">Health Record</option>
+                </select>
+            </div>
+            <div class="form-items">
+                <label>Purpose:</label>
+                <input type="text" name="purpose" required placeholder="Evaluation / Transfer">
+            </div>
+
+            <button type="submit" name="btnRegister">Submit Request</button>
         </div>
     </form>
 
-    <table>
+    <br><hr><br>
+
+    <h2>Submitted Requests Tracking List</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
-                <th>User ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Address</th>
+                <th>Generated File No.</th>
+                <th>Student No.</th>
+                <th>Student Name</th>
+                <th>Program</th>
+                <th>File Type</th>
+                <th>Purpose</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-           
-                <?php 
-                $select_users = "SELECT * FROM `users`";
-                $select_users_stmt = $con->prepare($select_users);
-                $select_users_stmt->execute();
-                $userlist = $select_users_stmt->get_result();
+            <?php 
+            $select_docs = "SELECT * FROM `document_requests` ORDER BY `id` DESC";
+            $select_docs_stmt =$con->prepare($select_docs);$select_docs_stmt->execute();
+            $doclist =$select_docs_stmt->get_result();
 
-                while($row = $userlist->fetch_assoc()){
-                    $userid = $so->decrypt($row['user_id']);
-                    $fname = $so->decrypt($row['firstname']);
-                    $lname = $so->decrypt($row['lastname']);
-                    $address = $so->decrypt($row['address']);
-                ?>
-                 <tr>
-                    <td><?php echo $userid;?></td>
-                    <td><?php echo $fname;?></td>
-                    <td><?php echo $lname;?></td>
-                    <td><?php echo $address;?></td>
-                </tr>
-                <?php }?>
-            
+            while($row =$doclist->fetch_assoc()){
+                $file_no    =$so->decrypt($row['file_no']);$student_no = $so->decrypt($row['student_no']);
+                $fname      =$so->decrypt($row['firstname']);$lname      = $so->decrypt($row['lastname']);
+                $program    =$so->decrypt($row['program']);$doc_type   = $so->decrypt($row['doc_type']);
+                $purpose    =$so->decrypt($row['purpose']);$status     = $so->decrypt($row['status']);
+            ?>
+            <tr>
+                <td><strong><?php echo $file_no; ?></strong></td>
+                <td><?php echo $student_no; ?></td>
+                <td><?php echo $fname . " " . $lname; ?></td>
+                <td><?php echo $program; ?></td>
+                <td><?php echo $doc_type; ?></td>
+                <td><?php echo $purpose; ?></td>
+                <td><?php echo $status; ?></td>
+            </tr>
+            <?php } ?>
         </tbody>
     </table>
+
 </body>
 </html>

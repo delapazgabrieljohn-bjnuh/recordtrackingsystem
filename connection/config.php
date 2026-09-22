@@ -4,7 +4,7 @@ function connection(){
     $host = "localhost";
     $user = "root";
     $pass = "";
-    $dbname = "t";
+    $dbname = "recordtrackingsystem";
 
     $con = new mysqli($host,$user,$pass,$dbname);
     if ($con->connect_error) {
