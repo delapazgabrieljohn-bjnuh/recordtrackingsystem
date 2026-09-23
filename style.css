@@ -1,27 +1,40 @@
+/* FEU Roosevelt Color Palette Variables */
+:root {
+    --feu-green: #00563f;
+    --feu-green-dark: #003d2c;
+    --feu-gold: #ffc72c;
+    --feu-gold-dark: #d9a314;
+    --feu-dark-text: #122119;
+    --bg-light: #f4f7f5;
+    --card-bg: #ffffff;
+    --border-color: #cbd5e1;
+}
+
 /* Base Styles & Typography */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
 }
 
 body {
-    background-color: #f4f6f9;
-    color: #333333;
+    background-color: var(--bg-light);
+    color: var(--feu-dark-text);
     padding: 30px 15px;
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* Section Titles */
+/* Section Titles with FEU Gold Underline */
 h2 {
-    color: #1e293b;
+    color: var(--feu-green);
     margin-bottom: 20px;
     font-size: 1.5rem;
-    border-bottom: 3px solid #2563eb;
+    border-bottom: 4px solid var(--feu-gold);
     display: inline-block;
-    padding-bottom: 5px;
+    padding-bottom: 6px;
+    font-weight: 700;
 }
 
 hr {
@@ -30,19 +43,20 @@ hr {
     margin: 25px 0;
 }
 
-/* Form Layout */
+/* Form Container styled as FEU Card */
 form {
-    background-color: #ffffff;
-    padding: 25px;
+    background-color: var(--card-bg);
+    padding: 28px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-top: 6px solid var(--feu-green);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 40px;
 }
 
 .form-fields {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
 }
 
 .form-items {
@@ -54,25 +68,27 @@ form {
 .form-items label {
     font-weight: 600;
     font-size: 0.9rem;
-    color: #475569;
+    color: var(--feu-dark-text);
 }
 
 /* Inputs, Selects & Placeholders */
 .form-items input,
 .form-items select {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 0.95rem;
     transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fafafa;
 }
 
 .form-items input:focus,
 .form-items select:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: var(--feu-green);
+    box-shadow: 0 0 0 3px rgba(0, 86, 63, 0.18);
+    background-color: #ffffff;
 }
 
 .form-items input::placeholder {
@@ -80,43 +96,51 @@ form {
     font-size: 0.85rem;
 }
 
-/* Submit Button */
+/* FEU Green Submit Button with Gold Hover Bar */
 button[type="submit"] {
-    background-color: #2563eb;
+    background-color: var(--feu-green);
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 700;
     padding: 12px 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease-in-out;
     margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 button[type="submit"]:hover {
-    background-color: #1d4ed8;
+    background-color: var(--feu-green-dark);
+    box-shadow: inset 0 -3px 0 0 var(--feu-gold);
 }
 
-/* Data Table */
+button[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+/* Data Table in FEU Green & Gold */
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-top: 15px;
+    border: none;
 }
 
 table th, table td {
-    padding: 12px 15px;
+    padding: 12px 16px;
     text-align: left;
 }
 
 table thead {
-    background-color: #1e293b;
-    color: #ffffff;
+    background-color: var(--feu-green);
+    color: var(--feu-gold);
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -128,19 +152,19 @@ table tbody tr {
 }
 
 table tbody tr:nth-of-type(even) {
-    background-color: #f8fafc;
+    background-color: #f8faf6;
 }
 
 table tbody tr:hover {
-    background-color: #f1f5f9;
+    background-color: #f0f7f2;
 }
 
-/* Highlight Status and File No */
+/* Highlighted References and Statuses */
 table td strong {
-    color: #2563eb;
+    color: var(--feu-green);
 }
 
-/* Responsive Grid for Larger Screens */
+/* Responsive Grid Layout */
 @media (min-width: 640px) {
     .form-fields {
         display: grid;
@@ -151,4 +175,3 @@ table td strong {
     button[type="submit"] {
         grid-column: span 2;
     }
-}
