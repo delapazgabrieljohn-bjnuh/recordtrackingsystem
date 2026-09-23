@@ -1,0 +1,2 @@
+// This is for login back_end, it checks if the user is logged in and redirects to the appropriate page based on their role. //
+// login for both students and admin. If the user is an admin, they will be redirected to the admin dashboard. If the user is a student, they will be redirected to the student dashboard. If the user is not logged in, they will be redirected to the login page. //

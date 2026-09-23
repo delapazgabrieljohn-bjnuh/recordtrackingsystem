@@ -1,0 +1,2 @@
+// This is for admin dashboard where makikita lang ng admin yung buong details ng mga submitted requests. // 
+// The admin can also update the status of the requests and assign them to the appropriate claiming area. //
