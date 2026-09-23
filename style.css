@@ -1,0 +1,154 @@
+/* Base Styles & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    color: #333333;
+    padding: 30px 15px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Section Titles */
+h2 {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    border-bottom: 3px solid #2563eb;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 25px 0;
+}
+
+/* Form Layout */
+form {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 40px;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-items label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+/* Inputs, Selects & Placeholders */
+.form-items input,
+.form-items select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-items input:focus,
+.form-items select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-items input::placeholder {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+
+/* Data Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+table thead {
+    background-color: #1e293b;
+    color: #ffffff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #f8fafc;
+}
+
+table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Highlight Status and File No */
+table td strong {
+    color: #2563eb;
+}
+
+/* Responsive Grid for Larger Screens */
+@media (min-width: 640px) {
+    .form-fields {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-fields hr,
+    button[type="submit"] {
+        grid-column: span 2;
+    }
+}
