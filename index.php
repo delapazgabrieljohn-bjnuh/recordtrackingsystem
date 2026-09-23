@@ -60,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnRegister'])){
             </div>
             <div class="form-items">
                 <label>Last Name:</label>
-                <input type="text" name="lastname" required placeholder="Dela Cruz  ">
+                <input type="text" name="lastname" required placeholder="Dela Cruz">
             </div>
             <div class="form-items">
                 <label>First Name:</label>
