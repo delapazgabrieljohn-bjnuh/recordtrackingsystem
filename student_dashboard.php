@@ -12,6 +12,10 @@ if (
 }
 
 $name = $_SESSION['user_name'] ?? 'Student';
+
+require_once __DIR__ . '/connection/config.php';
+require_once __DIR__ . '/helpers/NotificationService.php';
+$con = connection();
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +98,7 @@ $name = $_SESSION['user_name'] ?? 'Student';
         <a href="logout.php" class="logout">
             Logout
         </a>
+        <?php include("./helpers/notification_center.php"); ?>
     </div>
 
     <div class="dashboard">
@@ -141,3 +146,5 @@ $name = $_SESSION['user_name'] ?? 'Student';
 
 </body>
 </html>
+
+<?php $con->close(); ?>
