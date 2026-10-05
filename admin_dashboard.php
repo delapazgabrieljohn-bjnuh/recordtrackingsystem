@@ -25,6 +25,26 @@ $so = new SystemOperators();
 $success_message = '';
 $requests = [];
 
+// Handle update form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnUpdate'])) {
+    $request_id = $_POST['request_id'] ?? '';
+	$status = trim(filter_input(INPUT_POST, 'status', FILTER_UNSAFE_RAW) ?? '');
+	$claiming_area = trim(filter_input(INPUT_POST, 'claiming_area', FILTER_UNSAFE_RAW) ?? '');
+
+	$allowed_statuses = ['Pending', 'Processing', 'Approved', 'Ready for Claiming', 'Completed', 'Rejected'];
+
+    if ($request_id && in_array($status, $allowed_statuses) && $claiming_area !== '') {
+		$enc_status = $so->encrypt($status);
+		$enc_area = $so->encrypt($claiming_area);
+
+		$stmt = $con->prepare("UPDATE document_requests SET status = ?, claiming_area = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $enc_status, $enc_area, $request_id);
+        
+        if ($stmt->execute()) {
+            // Post-Redirect-Get pattern to prevent form resubmission on refresh
+            $active_tab = $_GET['tab'] ?? 'all';
+            header("Location: admin_dashboard.php?success=1");
+            exit;
 /* =========================
    SEARCH FILTER
    ========================= */
@@ -157,6 +177,10 @@ if (isset($_GET['success'])) {
         'Request updated successfully.';
 }
 
+$current_tab = $_GET['tab'] ?? 'all';
+
+// Fetch all document requests
+$query = "SELECT * FROM document_requests ORDER BY id DESC";
 /* =========================
    GET REQUESTS
    ========================= */
@@ -168,10 +192,26 @@ $query =
 
 if ($result = $con->query($query)) {
     while ($row = $result->fetch_assoc()) {
+        $row['status'] = $so->decrypt($row['status']) ?: 'Pending';
         $requests[] = $row;
     }
 
     $result->free();
+}
+
+$con->close();
+
+$filtered_requests = [];
+foreach ($requests as $request) {
+    if ($current_tab === 'all') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'pending' && $request['status'] === 'Pending') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'processing' && $request['status'] === 'Processing') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'approved' && $request['status'] === 'Approved') {
+        $filtered_requests[] = $request;
+    }
 }
 
 ?>
@@ -271,6 +311,16 @@ if ($result = $con->query($query)) {
 
     <?php endif; ?>
 
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+        <a href="admin_dashboard.php?tab=all" class="tab-btn <?= $current_tab === 'all' ? 'active' : '' ?>">All Requests</a>
+        <a href="admin_dashboard.php?tab=pending" class="tab-btn <?= $current_tab === 'pending' ? 'active' : '' ?>">Pending</a>
+        <a href="admin_dashboard.php?tab=processing" class="tab-btn <?= $current_tab === 'processing' ? 'active' : '' ?>">Processing</a>
+        <a href="admin_dashboard.php?tab=approved" class="tab-btn <?= $current_tab === 'approved' ? 'active' : '' ?>">Approved</a>
+    </div>
+
+    <h3>Submitted Requests (<?= count($filtered_requests) ?>)</h3>
+    
 
     <!-- =========================
          REQUESTS
@@ -319,6 +369,20 @@ if ($result = $con->query($query)) {
             </thead>
 
             <tbody>
+                <?php if (empty($filtered_requests)): ?>
+                    <tr><td class="empty-requests" colspan="8">No document requests submitted yet.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($filtered_requests as $request): ?>
+                        <?php
+                            // Decrypt fields up front for cleaner HTML rendering
+                            $status = $so->decrypt($request['status']) ?: 'Pending';
+                            $claiming_area = $so->decrypt($request['claiming_area'] ?? '') ?: '';
+                            $form_id = 'request-update-' . (int)$request['id'];
+                            $first = $so->decrypt($request['firstname']);
+                            $middle = $so->decrypt($request['middlename']) ?: '';
+                            $last = $so->decrypt($request['lastname']);
+                            $full_name = trim("$first $middle $last");
+                        ?>
                 <?php if (empty($requests)): ?>
                     <tr>
                         <td
