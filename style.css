@@ -461,67 +461,72 @@ table td strong {
    ========================================= */
 
 .admin-search {
-    background: #ffffff;
-    border-top: 6px solid #00664f;
-    border-radius: 10px;
-    padding: 30px;
     margin: 25px 0 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* =========================================
    SEARCH FORM
    ========================================= */
 
-.admin-search form {
-    background: transparent !important;
-    border: none !important;
-    border-top: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none !important;
+.admin-search .lookup-panel {
+    background: #ffffff;
+    border-top: 6px solid #00664f;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.admin-search .lookup-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+}
 
 /* =========================================
    SEARCH INPUT
    ========================================= */
 
-.admin-search input {
+.admin-search .lookup-row input {
     width: 100%;
-    height: 45px;
+    min-width: 0;
+    height: 46px;
     box-sizing: border-box;
-    padding: 10px 12px;
-    margin-bottom: 15px;
+    padding: 12px 14px;
     font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
     background: #ffffff;
+    color: #122119;
 }
 
+.admin-search .lookup-row input:focus {
+    outline: none;
+    border-color: #00664f;
+    box-shadow: 0 0 0 3px rgba(0, 102, 79, 0.12);
+}
 
 /* =========================================
    SEARCH BUTTON
    ========================================= */
 
-.admin-search button {
-    width: 100%;
-    height: 42px;
+.admin-search .lookup-row button {
+    height: 46px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     background: #00664f;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: 700;
+    padding: 0 20px;
     cursor: pointer;
     transition: background 0.2s ease;
+    white-space: nowrap;
 }
 
-
-.admin-search button:hover {
+.admin-search .lookup-row button:hover {
     background: #00533f;
 }
-
 
 /* =========================================
    CLEAR SEARCH
@@ -529,14 +534,20 @@ table td strong {
 
 .clear-search {
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 12px;
     color: #00664f;
     text-decoration: none;
+    font-weight: 600;
 }
-
 
 .clear-search:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .admin-search .lookup-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 

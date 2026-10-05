@@ -24,13 +24,11 @@ $so = new SystemOperators();
 $success_message = '';
 $requests = [];
 
-
 /* =========================
    SEARCH FILTER
    ========================= */
 
 $search = trim($_GET['search'] ?? '');
-
 
 /* =========================
    UPDATE REQUEST
@@ -59,7 +57,6 @@ if (
         ) ?? ''
     );
 
-
     $allowed_statuses = [
         'Pending',
         'Processing',
@@ -69,16 +66,14 @@ if (
         'Rejected'
     ];
 
-
     if (
         $request_id &&
-        in_array($status, $allowed_statuses) &&
+        in_array($status, $allowed_statuses, true) &&
         $claiming_area !== ''
     ) {
 
         $enc_status = $so->encrypt($status);
         $enc_area = $so->encrypt($claiming_area);
-
 
         $stmt = $con->prepare(
             "UPDATE document_requests
@@ -86,26 +81,27 @@ if (
              WHERE id = ?"
         );
 
-
-        $stmt->bind_param(
-            "ssi",
-            $enc_status,
-            $enc_area,
-            $request_id
-        );
-
-
-        if ($stmt->execute()) {
-
-            header(
-                "Location: admin_dashboard.php?success=1"
+        if ($stmt) {
+            $stmt->bind_param(
+                "ssi",
+                $enc_status,
+                $enc_area,
+                $request_id
             );
 
-            exit;
+            if ($stmt->execute()) {
+
+                $stmt->close();
+
+                header(
+                    "Location: admin_dashboard.php?success=1"
+                );
+
+                exit;
+            }
+
+            $stmt->close();
         }
-
-
-        $stmt->close();
     }
 }
 
@@ -115,11 +111,9 @@ if (
    ========================= */
 
 if (isset($_GET['success'])) {
-
     $success_message =
         'Request updated successfully.';
 }
-
 
 /* =========================
    GET REQUESTS
@@ -130,15 +124,13 @@ $query =
      FROM document_requests
      ORDER BY id DESC";
 
-
 if ($result = $con->query($query)) {
-
     while ($row = $result->fetch_assoc()) {
-
         $requests[] = $row;
     }
-}
 
+    $result->free();
+}
 
 $con->close();
 
@@ -162,143 +154,18 @@ $con->close();
     </title>
 
 
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Admin dashboard stylesheet -->
     <link
         rel="stylesheet"
-        href="style.css"
+        href="admin_dashboard.css"
     >
-
-
-    <style>
-
-        /* =========================
-           SEARCH FILTER
-           ========================= */
-
-        .admin-search {
-
-            background: #ffffff;
-
-            border-top: 6px solid #00664f;
-
-            border-radius: 10px;
-
-            padding: 30px;
-
-            margin: 25px 0 40px;
-
-            box-shadow:
-                0 4px 12px
-                rgba(0, 0, 0, 0.08);
-        }
-
-
-        /* =========================
-           REMOVE INNER FORM BOX
-           ========================= */
-
-        .admin-search form {
-
-            background: transparent !important;
-
-            border: none !important;
-
-            border-top: none !important;
-
-            border-radius: 0 !important;
-
-            padding: 0 !important;
-
-            margin: 0 !important;
-
-            box-shadow: none !important;
-        }
-
-
-        /* =========================
-           SEARCH INPUT
-           ========================= */
-
-        .admin-search input {
-
-            width: 100%;
-
-            height: 45px;
-
-            box-sizing: border-box;
-
-            padding: 10px 12px;
-
-            margin-bottom: 15px;
-
-            font-size: 15px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 5px;
-
-            background: #ffffff;
-        }
-
-
-        /* =========================
-           SEARCH BUTTON
-           ========================= */
-
-        .admin-search button {
-
-            width: 100%;
-
-            height: 42px;
-
-            border: none;
-
-            border-radius: 5px;
-
-            background: #00664f;
-
-            color: #ffffff;
-
-            font-weight: bold;
-
-            cursor: pointer;
-        }
-
-
-        .admin-search button:hover {
-
-            background: #00533f;
-        }
-
-
-        /* =========================
-           CLEAR SEARCH
-           ========================= */
-
-        .clear-search {
-
-            display: inline-block;
-
-            margin-top: 10px;
-
-            color: #00664f;
-
-            text-decoration: none;
-        }
-
-
-        .clear-search:hover {
-
-            text-decoration: underline;
-        }
-
-    </style>
 
 </head>
 
-
 <body>
-
-
     <!-- =========================
          ADMIN DASHBOARD
          ========================= -->
@@ -306,7 +173,6 @@ $con->close();
     <h2>
         Admin Dashboard
     </h2>
-
 
     <p>
         Review submitted document requests
@@ -319,38 +185,33 @@ $con->close();
          ========================= -->
 
     <div class="admin-search">
-
         <form
+            class="lookup-panel"
             method="GET"
             action="admin_dashboard.php"
         >
+            <div class="lookup-row">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search requests..."
+                    value="<?= htmlspecialchars($search) ?>"
+                >
 
-            <input
-                type="text"
-                name="search"
-                placeholder="Search requests..."
-                value="<?= htmlspecialchars($search) ?>"
-            >
-
-
-            <button type="submit">
-                SEARCH
-            </button>
-
+                <button type="submit">
+                    SEARCH
+                </button>
+            </div>
 
             <?php if ($search !== ''): ?>
-
                 <a
                     href="admin_dashboard.php"
                     class="clear-search"
                 >
                     Clear Search
                 </a>
-
             <?php endif; ?>
-
         </form>
-
     </div>
 
 
@@ -377,20 +238,10 @@ $con->close();
         Submitted Requests
     </h3>
 
-
     <div class="table-wrap">
-
-        <table
-            class="request-table"
-            border="1"
-            cellpadding="8"
-            cellspacing="0"
-        >
-
+        <table class="request-table">
             <thead>
-
                 <tr>
-
                     <th>
                         Ref No.
                     </th>
@@ -422,40 +273,26 @@ $con->close();
                     <th>
                         Status
                     </th>
-
                 </tr>
-
             </thead>
 
-
             <tbody>
-
-
                 <?php if (empty($requests)): ?>
-
                     <tr>
-
                         <td
                             class="empty-requests"
                             colspan="8"
                         >
-
                             No document requests
                             submitted yet.
-
                         </td>
-
                     </tr>
-
-
                 <?php else: ?>
+                    <?php
 
+                    $displayed_requests = 0;
 
-                    <?php foreach ($requests as $request): ?>
-
-
-                        <?php
-
+                    foreach ($requests as $request):
                         /* =========================
                            DECRYPT DATA
                            ========================= */
@@ -523,8 +360,7 @@ $con->close();
                         $status =
                             $so->decrypt(
                                 $request['status']
-                            )
-                            ?: 'Pending';
+                            ) ?: 'Pending';
 
 
                         /* =========================
@@ -556,6 +392,8 @@ $con->close();
                         }
 
 
+                        $displayed_requests++;
+
                         /* =========================
                            FORM ID
                            ========================= */
@@ -564,100 +402,55 @@ $con->close();
                             'request-update-' .
                             (int)$request['id'];
 
-                        ?>
-
+                    ?>
 
                         <tr>
-
-
-                            <!-- =====================
-                                 REF NO.
-                                 ===================== -->
-
+                            <!-- REF NO. -->
                             <td>
-
                                 <strong>
-
                                     <?= htmlspecialchars(
                                         $file_no
                                     ) ?>
-
                                 </strong>
-
                             </td>
 
-
-                            <!-- =====================
-                                 STUDENT NO.
-                                 ===================== -->
-
+                            <!-- STUDENT NO. -->
                             <td>
-
                                 <?= htmlspecialchars(
                                     $student_no
                                 ) ?>
-
                             </td>
 
-
-                            <!-- =====================
-                                 STUDENT NAME
-                                 ===================== -->
-
+                            <!-- STUDENT NAME -->
                             <td>
-
                                 <?= htmlspecialchars(
                                     $full_name
                                 ) ?>
-
                             </td>
 
-
-                            <!-- =====================
-                                 PROGRAM
-                                 ===================== -->
-
+                            <!-- PROGRAM -->
                             <td>
-
                                 <?= htmlspecialchars(
                                     $program
                                 ) ?>
-
                             </td>
 
-
-                            <!-- =====================
-                                 FILE TYPE
-                                 ===================== -->
-
+                            <!-- FILE TYPE -->
                             <td>
-
                                 <?= htmlspecialchars(
                                     $doc_type
                                 ) ?>
-
                             </td>
 
-
-                            <!-- =====================
-                                 PURPOSE
-                                 ===================== -->
-
+                            <!-- PURPOSE -->
                             <td>
-
                                 <?= htmlspecialchars(
                                     $purpose
                                 ) ?>
-
                             </td>
 
-
-                            <!-- =====================
-                                 CLAIMING AREA
-                                 ===================== -->
-
+                            <!-- CLAIMING AREA -->
                             <td>
-
                                 <input
                                     class="request-area"
                                     type="text"
@@ -669,30 +462,21 @@ $con->close();
                                     ) ?>"
                                     required
                                 >
-
                             </td>
 
-
-                            <!-- =====================
-                                 STATUS
-                                 ===================== -->
-
+                            <!-- STATUS -->
                             <td>
-
                                 <form
                                     class="request-form"
                                     id="<?= $form_id ?>"
                                     method="POST"
                                     action="admin_dashboard.php"
                                 >
-
-
                                     <input
                                         type="hidden"
                                         name="request_id"
                                         value="<?= (int)$request['id'] ?>"
                                     >
-
 
                                     <select
                                         name="status"
@@ -702,19 +486,12 @@ $con->close();
                                         <?php
 
                                         $options = [
-
                                             'Pending',
-
                                             'Processing',
-
                                             'Approved',
-
                                             'Ready for Claiming',
-
                                             'Completed',
-
                                             'Rejected'
-
                                         ];
 
 
@@ -722,7 +499,6 @@ $con->close();
                                             $options
                                             as $opt
                                         ):
-
                                         ?>
 
                                             <option
@@ -731,11 +507,9 @@ $con->close();
                                                     ? 'selected'
                                                     : '' ?>
                                             >
-
                                                 <?= htmlspecialchars(
                                                     $opt
                                                 ) ?>
-
                                             </option>
 
                                         <?php endforeach; ?>
@@ -747,33 +521,26 @@ $con->close();
                                         type="submit"
                                         name="btnUpdate"
                                     >
-
                                         Save Update
-
                                     </button>
-
-
                                 </form>
-
                             </td>
-
-
                         </tr>
-
-
                     <?php endforeach; ?>
 
-
+                    <?php if ($displayed_requests === 0): ?>
+                        <tr>
+                            <td
+                                class="empty-requests"
+                                colspan="8"
+                            >
+                                No requests match your search.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
                 <?php endif; ?>
-
-
             </tbody>
-
         </table>
-
     </div>
-
-
 </body>
-
 </html>
