@@ -17,6 +17,7 @@ if (
 
 include("./connection/config.php");
 include("./helpers/SystemOperators.php");
+require_once("./helpers/NotificationService.php");
 
 $con = connection();
 $so = new SystemOperators();
@@ -39,7 +40,7 @@ if (
     isset($_POST['btnUpdate'])
 ) {
 
-    $request_id = $_POST['request_id'] ?? '';
+    $request_id = filter_input(INPUT_POST, 'request_id', FILTER_VALIDATE_INT);
 
     $status = trim(
         filter_input(
@@ -68,39 +69,80 @@ if (
 
     if (
         $request_id &&
+        $request_id > 0 &&
         in_array($status, $allowed_statuses, true) &&
         $claiming_area !== ''
     ) {
 
-        $enc_status = $so->encrypt($status);
-        $enc_area = $so->encrypt($claiming_area);
-
-        $stmt = $con->prepare(
-            "UPDATE document_requests
-             SET status = ?, claiming_area = ?
+        $lookup = $con->prepare(
+            "SELECT user_id, email, file_no, status, claiming_area
+             FROM document_requests
              WHERE id = ?"
         );
+        $lookup->bind_param("i", $request_id);
+        $lookup->execute();
+        $existing_request = $lookup->get_result()->fetch_assoc();
+        $lookup->close();
 
-        if ($stmt) {
-            $stmt->bind_param(
-                "ssi",
-                $enc_status,
-                $enc_area,
-                $request_id
-            );
+        if ($existing_request) {
+            $old_status = $so->decrypt($existing_request['status']) ?: 'Pending';
+            $old_area = $so->decrypt($existing_request['claiming_area'] ?? '') ?: '';
+            $changes = [];
 
-            if ($stmt->execute()) {
-
-                $stmt->close();
-
-                header(
-                    "Location: admin_dashboard.php?success=1"
-                );
-
-                exit;
+            if ($old_status !== $status) {
+                $changes[] = "status changed from $old_status to $status";
+            }
+            if ($old_area !== $claiming_area) {
+                $old_area_text = $old_area !== '' ? $old_area : 'not assigned';
+                $changes[] = "claiming area changed from $old_area_text to $claiming_area";
             }
 
-            $stmt->close();
+            $recipient_id = $existing_request['user_id'] !== null
+                ? (int)$existing_request['user_id']
+                : null;
+
+            if ($recipient_id === null) {
+                $student_lookup = $con->prepare(
+                    "SELECT id FROM users WHERE email = ? AND role = 'student'"
+                );
+                $student_lookup->bind_param("s", $existing_request['email']);
+                $student_lookup->execute();
+                $student = $student_lookup->get_result()->fetch_assoc();
+                $student_lookup->close();
+                $recipient_id = $student ? (int)$student['id'] : null;
+            }
+
+            $enc_status = $so->encrypt($status);
+            $enc_area = $so->encrypt($claiming_area);
+
+            try {
+                $con->begin_transaction();
+                $update = $con->prepare(
+                    "UPDATE document_requests
+                     SET status = ?, claiming_area = ?
+                     WHERE id = ?"
+                );
+                $update->bind_param("ssi", $enc_status, $enc_area, $request_id);
+                $update->execute();
+                $update->close();
+
+                if ($changes && $recipient_id !== null) {
+                    $reference = $so->decrypt($existing_request['file_no']);
+                    $message = "Your request $reference was updated: " . implode('; ', $changes) . '.';
+                    addNotification($con, $recipient_id, $message, $request_id);
+                }
+
+                $con->commit();
+                $redirect_url = 'admin_dashboard.php?success=1';
+                if ($search !== '') {
+                    $redirect_url .= '&search=' . urlencode($search);
+                }
+                header("Location: $redirect_url");
+                exit;
+            } catch (Throwable $error) {
+                $con->rollback();
+                error_log($error->getMessage());
+            }
         }
     }
 }
@@ -131,8 +173,6 @@ if ($result = $con->query($query)) {
 
     $result->free();
 }
-
-$con->close();
 
 ?>
 
@@ -170,14 +210,16 @@ $con->close();
          ADMIN DASHBOARD
          ========================= -->
 
-    <h2>
-        Admin Dashboard
-    </h2>
-
-    <p>
-        Review submitted document requests
-        and update their status and claiming area.
-    </p>
+    <div class="dashboard-header">
+        <div>
+            <h2>Admin Dashboard</h2>
+            <p>Review submitted document requests and update their status and claiming area.</p>
+        </div>
+        <div class="dashboard-actions">
+            <?php include("./helpers/notification_center.php"); ?>
+            <a href="logout.php" class="logout">Log out</a>
+        </div>
+    </div>
 
 
     <!-- =========================
@@ -544,3 +586,5 @@ $con->close();
     </div>
 </body>
 </html>
+
+<?php $con->close(); ?>

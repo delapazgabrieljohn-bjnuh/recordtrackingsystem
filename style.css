@@ -183,6 +183,162 @@ body:has(.container) {
 }
 /* End of Login Page Styles */
 
+.dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.dashboard-header h2 {
+    margin-bottom: 10px;
+}
+
+.dashboard-header p {
+    margin-bottom: 0;
+}
+
+.dashboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.notification-center {
+    position: relative;
+    flex: 0 0 auto;
+    z-index: 5;
+}
+
+.notification-center summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    list-style: none;
+    padding: 0;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--feu-dark-text, #122119);
+    font-weight: 600;
+}
+
+.notification-bell {
+    display: block;
+    width: 21px;
+    height: 21px;
+}
+
+.notification-center summary::-webkit-details-marker {
+    display: none;
+}
+
+.notification-count {
+    display: inline-grid;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 20px;
+    height: 20px;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: #b91c1c;
+    color: #fff;
+    font-size: 0.75rem;
+}
+
+.notification-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: min(360px, calc(100vw - 30px));
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.notification-panel-header,
+.notification-panel li {
+    padding: 12px 14px;
+}
+
+.notification-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.notification-panel form {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.notification-panel button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: #00563f;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.notification-panel ul {
+    list-style: none;
+}
+
+.notification-panel li {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.notification-panel li.unread {
+    background: #f0f7f4;
+}
+
+.notification-panel li p {
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.notification-panel time {
+    display: block;
+    margin-bottom: 7px;
+    color: #64748b;
+    font-size: 0.78rem;
+}
+
+.notification-empty {
+    padding: 16px;
+    color: #64748b;
+}
+
+@media (max-width: 640px) {
+    .dashboard-header {
+        align-items: flex-start;
+    }
+
+    .header .notification-center {
+        margin-left: auto;
+    }
+}
+
 /* FEU Roosevelt Color Palette Variables */
 :root {
     --feu-green: #00563f;
