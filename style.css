@@ -862,3 +862,41 @@ table td strong {
     }
 
 }
+
+.request-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin: 18px 0 22px;
+    border-bottom: 4px solid var(--feu-gold, #ffc72c);
+}
+
+.request-tab {
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    background: #e8edef;
+    color: var(--feu-green-dark, #003d2c);
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.request-tab:hover {
+    background: #dce5e3;
+}
+
+.request-tab.active,
+.request-tab.active:hover {
+    background: #fff000;
+    color: #003d2c;
+}
+
+@media (max-width: 560px) {
+    .request-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

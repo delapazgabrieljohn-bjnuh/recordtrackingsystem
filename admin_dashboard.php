@@ -24,12 +24,27 @@ $so = new SystemOperators();
 
 $success_message = '';
 $requests = [];
+$tabs = [
+    'all' => 'All Requests',
+    'pending' => 'Pending',
+    'processing' => 'Processing',
+    'approved' => 'Approved'
+];
+$current_tab = $_GET['tab'] ?? $_POST['tab'] ?? 'all';
+if (!array_key_exists($current_tab, $tabs)) {
+    $current_tab = 'all';
+}
+$tab_statuses = [
+    'pending' => 'Pending',
+    'processing' => 'Processing',
+    'approved' => 'Approved'
+];
 
 /* =========================
    SEARCH FILTER
    ========================= */
 
-$search = trim($_GET['search'] ?? '');
+$search = trim($_GET['search'] ?? $_POST['search'] ?? '');
 
 /* =========================
    UPDATE REQUEST
@@ -133,11 +148,14 @@ if (
                 }
 
                 $con->commit();
-                $redirect_url = 'admin_dashboard.php?success=1';
+                $redirect_params = [
+                    'success' => 1,
+                    'tab' => $current_tab
+                ];
                 if ($search !== '') {
-                    $redirect_url .= '&search=' . urlencode($search);
+                    $redirect_params['search'] = $search;
                 }
-                header("Location: $redirect_url");
+                header('Location: admin_dashboard.php?' . http_build_query($redirect_params));
                 exit;
             } catch (Throwable $error) {
                 $con->rollback();
@@ -239,6 +257,7 @@ if ($result = $con->query($query)) {
                     placeholder="Search requests..."
                     value="<?= htmlspecialchars($search) ?>"
                 >
+                <input type="hidden" name="tab" value="<?= htmlspecialchars($current_tab) ?>">
 
                 <button type="submit">
                     SEARCH
@@ -247,7 +266,7 @@ if ($result = $con->query($query)) {
 
             <?php if ($search !== ''): ?>
                 <a
-                    href="admin_dashboard.php"
+                    href="admin_dashboard.php?<?= http_build_query(['tab' => $current_tab]) ?>"
                     class="clear-search"
                 >
                     Clear Search
@@ -255,6 +274,22 @@ if ($result = $con->query($query)) {
             <?php endif; ?>
         </form>
     </div>
+
+    <nav class="request-tabs" aria-label="Filter document requests">
+        <?php foreach ($tabs as $tab_key => $tab_label): ?>
+            <?php
+            $tab_url = ['tab' => $tab_key];
+            if ($search !== '') {
+                $tab_url['search'] = $search;
+            }
+            ?>
+            <a
+                class="request-tab<?= $current_tab === $tab_key ? ' active' : '' ?>"
+                href="admin_dashboard.php?<?= htmlspecialchars(http_build_query($tab_url), ENT_QUOTES, 'UTF-8') ?>"
+                <?= $current_tab === $tab_key ? 'aria-current="page"' : '' ?>
+            ><?= htmlspecialchars($tab_label, ENT_QUOTES, 'UTF-8') ?></a>
+        <?php endforeach; ?>
+    </nav>
 
 
     <!-- =========================
@@ -333,6 +368,7 @@ if ($result = $con->query($query)) {
                     <?php
 
                     $displayed_requests = 0;
+                    $tab_filtered_count = 0;
 
                     foreach ($requests as $request):
                         /* =========================
@@ -403,6 +439,14 @@ if ($result = $con->query($query)) {
                             $so->decrypt(
                                 $request['status']
                             ) ?: 'Pending';
+
+                        if (
+                            $current_tab !== 'all' &&
+                            $status !== $tab_statuses[$current_tab]
+                        ) {
+                            continue;
+                        }
+                        $tab_filtered_count++;
 
 
                         /* =========================
@@ -519,6 +563,8 @@ if ($result = $con->query($query)) {
                                         name="request_id"
                                         value="<?= (int)$request['id'] ?>"
                                     >
+                                    <input type="hidden" name="tab" value="<?= htmlspecialchars($current_tab) ?>">
+                                    <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
 
                                     <select
                                         name="status"
@@ -576,7 +622,9 @@ if ($result = $con->query($query)) {
                                 class="empty-requests"
                                 colspan="8"
                             >
-                                No requests match your search.
+                                <?= $search !== ''
+                                    ? 'No requests match your search.'
+                                    : 'No requests in this tab.' ?>
                             </td>
                         </tr>
                     <?php endif; ?>
