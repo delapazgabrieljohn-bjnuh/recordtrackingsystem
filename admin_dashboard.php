@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnUpdate'])) {
         
         if ($stmt->execute()) {
             // Post-Redirect-Get pattern to prevent form resubmission on refresh
+            $active_tab = $_GET['tab'] ?? 'all';
             header("Location: admin_dashboard.php?success=1");
             exit;
         }
@@ -50,15 +51,32 @@ if (isset($_GET['success'])) {
     $success_message = 'Request updated successfully.';
 }
 
+$current_tab = $_GET['tab'] ?? 'all';
+
 // Fetch all document requests
 $query = "SELECT * FROM document_requests ORDER BY id DESC";
 if ($result = $con->query($query)) {
     while ($row = $result->fetch_assoc()) {
+        $row['status'] = $so->decrypt($row['status']) ?: 'Pending';
         $requests[] = $row;
     }
 }
 
 $con->close();
+
+$filtered_requests = [];
+foreach ($requests as $request) {
+    if ($current_tab === 'all') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'pending' && $request['status'] === 'Pending') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'processing' && $request['status'] === 'Processing') {
+        $filtered_requests[] = $request;
+    } elseif ($current_tab === 'approved' && $request['status'] === 'Approved') {
+        $filtered_requests[] = $request;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +95,15 @@ $con->close();
         <div class="success-alert"><?= htmlspecialchars($success_message) ?></div>
     <?php endif; ?>
 
-    <h3>Submitted Requests (<?= count($requests) ?>)</h3>
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+        <a href="admin_dashboard.php?tab=all" class="tab-btn <?= $current_tab === 'all' ? 'active' : '' ?>">All Requests</a>
+        <a href="admin_dashboard.php?tab=pending" class="tab-btn <?= $current_tab === 'pending' ? 'active' : '' ?>">Pending</a>
+        <a href="admin_dashboard.php?tab=processing" class="tab-btn <?= $current_tab === 'processing' ? 'active' : '' ?>">Processing</a>
+        <a href="admin_dashboard.php?tab=approved" class="tab-btn <?= $current_tab === 'approved' ? 'active' : '' ?>">Approved</a>
+    </div>
+
+    <h3>Submitted Requests (<?= count($filtered_requests) ?>)</h3>
     
     <div class="table-wrap">
         <table class="request-table" border="1" cellpadding="8" cellspacing="0">
@@ -94,10 +120,10 @@ $con->close();
                 </tr>
             </thead>
             <tbody>
-                <?php if (empty($requests)): ?>
+                <?php if (empty($filtered_requests)): ?>
                     <tr><td class="empty-requests" colspan="8">No document requests submitted yet.</td></tr>
                 <?php else: ?>
-                    <?php foreach ($requests as $request): ?>
+                    <?php foreach ($filtered_requests as $request): ?>
                         <?php
                             // Decrypt fields up front for cleaner HTML rendering
                             $status = $so->decrypt($request['status']) ?: 'Pending';

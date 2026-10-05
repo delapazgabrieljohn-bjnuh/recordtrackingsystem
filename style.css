@@ -354,7 +354,7 @@ table td strong {
     .form-fields {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-    }
+    }}
 
     .form-fields hr,
     button[type="submit"] {
@@ -404,11 +404,38 @@ table td strong {
 
 /* Admin dashboard */
 .table-wrap { overflow-x: auto; }
-.request-table { min-width: 950px; }
+
+.tab-container { display: flex; gap: 5px; margin-top: 15px; margin-bottom: 20px; border-bottom: 4px solid #ffc107; }
+
+.tab-btn { 
+  padding: 18px 81px; 
+  background: #e9ecef; 
+  color: #004D25; 
+  text-decoration: none; 
+  font-weight: bold; 
+  font-size: 16px; 
+  transition: background 0.2s, color 0.2s; 
+  white-space: nowrap; }
+
+.tab-btn:hover { background: #f0f0f0; }
+.tab-btn.active { background: #ffc107; color: rgb(0, 77, 0); }
+
+.request-table { 
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 950px; }
+
+.reequest-table th {
+  background: #004d25;
+  color: #ffc107;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #003318;
+}
 .request-form { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
 .request-form select, .request-form input, .request-form button, .request-area { width: 100%; padding: 6px; }
 .success-alert { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
-.empty-requests { text-align: center; }
+.empty-requests { text-align: center; padding: 20px;}
 
 /* Login and registration messages */
 .login-message { padding: 8px; border-radius: 4px; font-size: .85rem; margin-bottom: 10px; }
