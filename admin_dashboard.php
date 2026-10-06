@@ -192,6 +192,18 @@ if ($result = $con->query($query)) {
     $result->free();
 }
 
+$tab_counts = array_fill_keys(array_keys($tabs), 0);
+foreach ($requests as $request) {
+    $request_status = $so->decrypt($request['status']) ?: 'Pending';
+    $tab_counts['all']++;
+
+    foreach ($tab_statuses as $tab_key => $tab_status) {
+        if ($request_status === $tab_status) {
+            $tab_counts[$tab_key]++;
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -287,7 +299,7 @@ if ($result = $con->query($query)) {
                 class="request-tab<?= $current_tab === $tab_key ? ' active' : '' ?>"
                 href="admin_dashboard.php?<?= htmlspecialchars(http_build_query($tab_url), ENT_QUOTES, 'UTF-8') ?>"
                 <?= $current_tab === $tab_key ? 'aria-current="page"' : '' ?>
-            ><?= htmlspecialchars($tab_label, ENT_QUOTES, 'UTF-8') ?></a>
+            ><?= htmlspecialchars($tab_label, ENT_QUOTES, 'UTF-8') ?> (<?= $tab_counts[$tab_key] ?>)</a>
         <?php endforeach; ?>
     </nav>
 
@@ -498,6 +510,9 @@ if ($result = $con->query($query)) {
                                         $file_no
                                     ) ?>
                                 </strong>
+                                <time class="request-date" datetime="<?= htmlspecialchars($request['created_at'], ENT_QUOTES, 'UTF-8') ?>">
+                                    <?= htmlspecialchars(date('Y/m/d', strtotime($request['created_at'])), ENT_QUOTES, 'UTF-8') ?>
+                                </time>
                             </td>
 
                             <!-- STUDENT NO. -->
@@ -536,7 +551,7 @@ if ($result = $con->query($query)) {
                             </td>
 
                             <!-- CLAIMING AREA -->
-                            <td>
+                            <td class="claiming-area-cell">
                                 <input
                                     class="request-area"
                                     type="text"
