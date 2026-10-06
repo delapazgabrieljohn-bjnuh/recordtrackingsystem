@@ -27,7 +27,7 @@ $con = connection();
 
     <title>Student Portal - FEU Roosevelt</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
     <style>
         body {
@@ -47,6 +47,7 @@ $con = connection();
 
         .header h2 {
             margin: 0;
+            color: #ffffff;
         }
 
         .logout {

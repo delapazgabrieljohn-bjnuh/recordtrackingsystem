@@ -225,7 +225,7 @@ foreach ($requests as $request) {
 
 
     <!-- Main stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
     <!-- Admin dashboard stylesheet -->
     <link

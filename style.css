@@ -263,6 +263,7 @@ body:has(.container) {
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     background: #fff;
+    color: #122119;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 }
 
@@ -315,6 +316,7 @@ body:has(.container) {
 .notification-panel li p {
     margin-bottom: 6px;
     line-height: 1.4;
+    color: #122119;
 }
 
 .notification-panel time {
@@ -915,4 +917,36 @@ table td strong {
     .request-tabs {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+/* ========================================
+   NOTIFICATION PANEL
+   ========================================= */
+.notification-panel,
+.notification-panel-header,
+.notification-panel li,
+.notification-panel li p {
+    color: #122119;
+}
+
+.notification-panel form button[type="submit"] {
+    display: inline-flex;
+    width: auto;
+    min-height: 36px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 5px;
+    background: #00563f;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.notification-panel form button[type="submit"]:hover {
+    background: #003d2c;
 }
