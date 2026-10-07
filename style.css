@@ -518,6 +518,7 @@ table td strong {
     button[type="submit"] {
         grid-column: span 2;
     }
+}
 
       /* Back to Request Form Button for track.php */
 .back-link {
@@ -949,4 +950,727 @@ table td strong {
 
 .notification-panel form button[type="submit"]:hover {
     background: #003d2c;
+}
+
+/* Student dashboard */
+body.student-dashboard-page {
+    --student-green: #006b3c;
+    --student-green-deep: #004b35;
+    --student-gold: #f1c644;
+    --student-ink: #18342b;
+    --student-muted: #61736c;
+    --student-line: #dce6e1;
+    --student-canvas: #f3f7f5;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: var(--student-canvas);
+    color: var(--student-ink);
+}
+
+.student-dashboard-page .student-topbar {
+    background: var(--student-green-deep);
+    border-bottom: 4px solid var(--student-gold);
+    color: #fff;
+}
+
+.student-dashboard-page .student-topbar-inner {
+    display: flex;
+    min-height: 76px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 12px 28px;
+}
+
+.student-dashboard-page .student-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.student-dashboard-page .brand-mark {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .45);
+    border-radius: 50%;
+    color: var(--student-gold);
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.student-dashboard-page .brand-copy span,
+.student-dashboard-page .brand-copy strong {
+    display: block;
+}
+
+.student-dashboard-page .brand-copy span {
+    color: #c8ddd4;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.student-dashboard-page .brand-copy strong {
+    font-size: 1rem;
+}
+
+.student-dashboard-page .student-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-dashboard-page .student-topbar-actions .student-nav-link {
+    padding: 9px 12px;
+    color: #f5faf7;
+    font-size: .92rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.student-dashboard-page .student-topbar-actions .student-nav-link:hover {
+    color: var(--student-gold);
+}
+
+.student-dashboard-page .student-topbar-actions .student-new-request {
+    border-radius: 5px;
+    background: var(--student-gold);
+    color: #17382c;
+}
+
+.student-dashboard-page .student-topbar-actions .student-new-request:hover {
+    background: #ffda68;
+    color: #17382c;
+}
+
+.student-dashboard-page .student-topbar .notification-center summary {
+    border-color: rgba(255, 255, 255, .6);
+}
+
+.student-dashboard-page .student-topbar .logout {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 13px;
+    border-radius: 5px;
+    background: #a72c2c;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.student-dashboard-page .student-main {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 34px 28px 52px;
+}
+
+.student-dashboard-page .student-welcome {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.student-dashboard-page .student-eyebrow {
+    margin: 0 0 8px;
+    color: var(--student-green);
+    font-size: .76rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.student-dashboard-page .student-welcome h1 {
+    margin: 0 0 8px;
+    border: 0;
+    color: var(--student-ink);
+    font-size: 1.9rem;
+    font-weight: 750;
+}
+
+.student-dashboard-page .student-welcome p:last-child {
+    margin: 0;
+    color: var(--student-muted);
+}
+
+.student-dashboard-page .welcome-date {
+    flex: 0 0 auto;
+    padding-bottom: 4px;
+    color: var(--student-muted);
+    font-size: .9rem;
+}
+
+.student-dashboard-page .student-metric {
+    height: 100%;
+    min-height: 124px;
+    padding: 18px 20px;
+    border: 1px solid var(--student-line);
+    border-top: 3px solid var(--student-green);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.student-dashboard-page .student-metric.metric-ready {
+    border-top-color: #c89615;
+}
+
+.student-dashboard-page .student-metric.metric-complete {
+    border-top-color: #327a68;
+}
+
+.student-dashboard-page .student-metric-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--student-muted);
+    font-size: .83rem;
+    font-weight: 650;
+}
+
+.student-dashboard-page .student-metric-value {
+    color: var(--student-ink);
+    font-size: 1.9rem;
+    font-weight: 750;
+    line-height: 1;
+}
+
+.student-dashboard-page .student-section {
+    height: 100%;
+    border: 1px solid var(--student-line);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.student-dashboard-page .student-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--student-line);
+}
+
+.student-dashboard-page .student-section-header h2 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--student-ink);
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.student-dashboard-page .student-section-header a {
+    color: var(--student-green);
+    font-size: .85rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.student-dashboard-page .student-section-header a:hover {
+    text-decoration: underline;
+}
+
+.student-dashboard-page .student-requests-table {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+}
+
+.student-dashboard-page .student-requests-table thead th {
+    padding: 11px 16px;
+    background: #f3f7f5;
+    color: #53665e;
+    font-size: .72rem;
+    letter-spacing: .04em;
+}
+
+.student-dashboard-page .student-requests-table tbody td {
+    padding: 14px 16px;
+    border-color: #e8eeeb;
+    color: var(--student-ink);
+    vertical-align: middle;
+}
+
+.student-dashboard-page .student-reference {
+    color: var(--student-green-deep);
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.student-dashboard-page .student-document-name {
+    font-weight: 650;
+}
+
+.student-dashboard-page .student-date {
+    color: var(--student-muted) !important;
+    white-space: nowrap;
+}
+
+.student-dashboard-page .request-status {
+    display: inline-flex;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.student-dashboard-page .status-pending { background: #fff1cc; color: #70520a; }
+.student-dashboard-page .status-processing { background: #e4effb; color: #23537c; }
+.student-dashboard-page .status-approved { background: #e1f3eb; color: #1d694d; }
+.student-dashboard-page .status-ready { background: #e4f2ce; color: #3d6519; }
+.student-dashboard-page .status-completed { background: #e9edf0; color: #45545d; }
+.student-dashboard-page .status-rejected { background: #fbe6e4; color: #9b302b; }
+
+.student-dashboard-page .student-empty-state {
+    padding: 34px 24px;
+    text-align: center;
+}
+
+.student-dashboard-page .student-empty-state h3 {
+    margin: 0 0 7px;
+    color: var(--student-ink);
+    font-size: 1rem;
+}
+
+.student-dashboard-page .student-empty-state p {
+    margin: 0 0 16px;
+    color: var(--student-muted);
+}
+
+.student-dashboard-page .student-quick-actions {
+    padding: 4px 20px 12px;
+}
+
+.student-dashboard-page .student-action-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--student-line);
+    color: var(--student-ink);
+    text-decoration: none;
+}
+
+.student-dashboard-page .student-action-link:last-child {
+    border-bottom: 0;
+}
+
+.student-dashboard-page .student-action-link strong,
+.student-dashboard-page .student-action-link small {
+    display: block;
+}
+
+.student-dashboard-page .student-action-link strong {
+    font-size: .92rem;
+}
+
+.student-dashboard-page .student-action-link small {
+    margin-top: 3px;
+    color: var(--student-muted);
+    font-size: .8rem;
+}
+
+.student-dashboard-page .student-action-arrow {
+    color: var(--student-green);
+    font-size: 1.2rem;
+}
+
+.student-dashboard-page .student-help-note {
+    margin: 0 20px 20px;
+    padding: 13px 14px;
+    border-left: 3px solid var(--student-gold);
+    background: #f7f8f1;
+    color: #4f6158;
+    font-size: .82rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+    .student-dashboard-page .student-topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px 18px;
+    }
+
+    .student-dashboard-page .student-topbar-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .student-dashboard-page .student-main {
+        padding: 26px 16px 40px;
+    }
+
+    .student-dashboard-page .student-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+}
+
+@media (max-width: 575px) {
+    .student-dashboard-page .student-welcome h1 { font-size: 1.55rem; }
+    .student-dashboard-page .student-requests-table { min-width: 600px; }
+    .student-dashboard-page .student-request-scroll { overflow-x: auto; }
+    .student-dashboard-page .student-topbar-actions .student-nav-link { padding: 8px 9px; }
+}
+
+/* Admin dashboard */
+body.admin-dashboard-page {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: #f3f7f5;
+    color: #18342b;
+}
+
+.admin-dashboard-page .admin-topbar {
+    background: #004b35;
+    border-bottom: 4px solid #f1c644;
+    color: #fff;
+}
+
+.admin-dashboard-page .admin-topbar-inner {
+    display: flex;
+    min-height: 76px;
+    max-width: 1480px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 0 auto;
+    padding: 12px 32px;
+}
+
+.admin-dashboard-page .admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.admin-dashboard-page .admin-brand-mark {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .45);
+    border-radius: 50%;
+    color: #f1c644;
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.admin-dashboard-page .admin-brand-copy small,
+.admin-dashboard-page .admin-brand-copy strong {
+    display: block;
+}
+
+.admin-dashboard-page .admin-brand-copy small {
+    color: #c8ddd4;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.admin-dashboard-page .admin-brand-copy strong {
+    font-size: 1rem;
+}
+
+.admin-dashboard-page .admin-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-dashboard-page .admin-logout {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    padding: 8px 13px;
+    border-radius: 5px;
+    background: #a72c2c;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-dashboard-page .admin-logout:hover {
+    background: #8d2424;
+    color: #fff;
+}
+
+.admin-dashboard-page .admin-main {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.admin-dashboard-page .admin-overview {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.admin-dashboard-page .admin-eyebrow {
+    margin: 0 0 7px;
+    color: #006b3c;
+    font-size: .74rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.admin-dashboard-page .admin-overview h1 {
+    margin: 0 0 7px;
+    padding: 0;
+    border: 0;
+    color: #18342b;
+    font-size: 1.8rem;
+    font-weight: 750;
+}
+
+.admin-dashboard-page .admin-overview p:last-child {
+    margin: 0;
+    color: #61736c;
+}
+
+.admin-dashboard-page .admin-overview time {
+    flex: 0 0 auto;
+    padding-bottom: 3px;
+    color: #61736c;
+    font-size: .9rem;
+}
+
+.admin-dashboard-page .admin-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.admin-dashboard-page .admin-metric {
+    display: flex;
+    min-height: 112px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border: 1px solid #dce6e1;
+    border-top: 3px solid #006b3c;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.admin-dashboard-page .admin-metric.metric-pending {
+    border-top-color: #c89615;
+}
+
+.admin-dashboard-page .admin-metric.metric-processing {
+    border-top-color: #3977a6;
+}
+
+.admin-dashboard-page .admin-metric.metric-ready {
+    border-top-color: #327a68;
+}
+
+.admin-dashboard-page .admin-metric span {
+    color: #61736c;
+    font-size: .82rem;
+    font-weight: 650;
+}
+
+.admin-dashboard-page .admin-metric strong {
+    color: #18342b;
+    font-size: 1.85rem;
+    line-height: 1;
+}
+
+.admin-dashboard-page .admin-queue {
+    min-width: 0;
+}
+
+.admin-dashboard-page .admin-queue-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.admin-dashboard-page .admin-queue-heading .admin-eyebrow {
+    margin-bottom: 4px;
+}
+
+.admin-dashboard-page .admin-queue-heading h2 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #18342b;
+    font-size: 1.25rem;
+    font-weight: 750;
+}
+
+.admin-dashboard-page .admin-queue-heading > span {
+    color: #61736c;
+    font-size: .85rem;
+}
+
+.admin-dashboard-page .admin-search {
+    margin: 0 0 16px;
+}
+
+.admin-dashboard-page .admin-search .lookup-panel {
+    padding: 16px;
+    border: 1px solid #dce6e1;
+    border-left: 4px solid #006b3c;
+    border-top: 0;
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.admin-dashboard-page .request-tabs {
+    margin-top: 0;
+}
+
+.admin-dashboard-page .table-wrap {
+    overflow: auto;
+    border: 1px solid #dce6e1;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.admin-dashboard-page .admin-request-table {
+    min-width: 1120px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.admin-dashboard-page .admin-request-table th {
+    padding: 13px 12px;
+    background: #00563f;
+    color: #f1c644;
+    font-size: .76rem;
+    letter-spacing: .035em;
+}
+
+.admin-dashboard-page .admin-request-table td {
+    padding: 12px;
+    border-color: #e2eae6;
+    color: #18342b;
+}
+
+.admin-dashboard-page .admin-request-table tbody tr:nth-child(even) {
+    background: #f8faf9;
+}
+
+.admin-dashboard-page .admin-request-table tbody tr:hover {
+    background: #f0f7f3;
+}
+
+.admin-dashboard-page .admin-request-table td.claiming-area-cell {
+    background: #fff6c8;
+}
+
+.admin-dashboard-page .request-form {
+    min-width: 150px;
+    gap: 8px;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid #e2eae6;
+    border-top: 2px solid #006b3c;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: none;
+}
+
+.admin-dashboard-page .request-form select {
+    min-width: 0;
+    padding: 8px;
+}
+
+.admin-dashboard-page .request-form button {
+    width: 100%;
+    margin: 0;
+    padding: 9px 10px;
+    border-radius: 5px;
+    background: #006b3c;
+    font-size: .78rem;
+    letter-spacing: .02em;
+}
+
+.admin-dashboard-page .request-form button:hover {
+    background: #004b35;
+}
+
+.admin-dashboard-page .request-date {
+    color: #61736c;
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard-page .admin-main {
+        padding: 26px 20px;
+    }
+
+    .admin-dashboard-page .admin-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-dashboard-page .admin-topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px 16px;
+    }
+
+    .admin-dashboard-page .admin-topbar-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .admin-dashboard-page .admin-main {
+        padding: 22px 14px 36px;
+    }
+
+    .admin-dashboard-page .admin-overview {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .admin-dashboard-page .admin-overview h1 {
+        font-size: 1.55rem;
+    }
+
+    .admin-dashboard-page .admin-metrics {
+        gap: 10px;
+    }
+
+    .admin-dashboard-page .admin-metric {
+        min-height: 100px;
+        padding: 13px;
+    }
+
+    .admin-dashboard-page .request-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }

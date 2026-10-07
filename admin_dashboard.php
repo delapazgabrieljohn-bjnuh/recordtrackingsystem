@@ -193,9 +193,20 @@ if ($result = $con->query($query)) {
 }
 
 $tab_counts = array_fill_keys(array_keys($tabs), 0);
+$status_counts = array_fill_keys([
+    'Pending',
+    'Processing',
+    'Approved',
+    'Ready for Claiming',
+    'Completed',
+    'Rejected'
+], 0);
 foreach ($requests as $request) {
     $request_status = $so->decrypt($request['status']) ?: 'Pending';
     $tab_counts['all']++;
+    if (isset($status_counts[$request_status])) {
+        $status_counts[$request_status]++;
+    }
 
     foreach ($tab_statuses as $tab_key => $tab_status) {
         if ($request_status === $tab_status) {
@@ -223,34 +234,64 @@ foreach ($requests as $request) {
         Admin Dashboard | Document Requests
     </title>
 
-
-    <!-- Main stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
-
-    <!-- Admin dashboard stylesheet -->
-    <link
-        rel="stylesheet"
-        href="admin_dashboard.css"
-    >
-
 </head>
 
-<body>
-    <!-- =========================
-         ADMIN DASHBOARD
-         ========================= -->
-
-    <div class="dashboard-header">
-        <div>
-            <h2>Admin Dashboard</h2>
-            <p>Review submitted document requests and update their status and claiming area.</p>
+<body class="admin-dashboard-page">
+    <header class="admin-topbar">
+        <div class="admin-topbar-inner">
+            <a class="admin-brand" href="admin_dashboard.php" aria-label="FEU Roosevelt records dashboard">
+                <span class="admin-brand-mark" aria-hidden="true">FR</span>
+                <span class="admin-brand-copy">
+                    <small>FEU ROOSEVELT</small>
+                    <strong>Records Office</strong>
+                </span>
+            </a>
+            <div class="admin-topbar-actions">
+                <?php include("./helpers/notification_center.php"); ?>
+                <a href="logout.php" class="admin-logout">Sign out</a>
+            </div>
         </div>
-        <div class="dashboard-actions">
-            <?php include("./helpers/notification_center.php"); ?>
-            <a href="logout.php" class="logout">Log out</a>
-        </div>
-    </div>
+    </header>
 
+    <main class="admin-main container-fluid">
+        <section class="admin-overview" aria-labelledby="admin-page-title">
+            <div>
+                <p class="admin-eyebrow">Records operations</p>
+                <h1 id="admin-page-title">Request overview</h1>
+                <p>Review requests, update their status, and coordinate claiming details.</p>
+            </div>
+            <time datetime="<?= date('Y-m-d') ?>"><?= date('l, F j, Y') ?></time>
+        </section>
+
+        <section class="admin-metrics" aria-label="Request totals">
+            <div class="admin-metric">
+                <span>Total requests</span>
+                <strong><?= $tab_counts['all'] ?></strong>
+            </div>
+            <div class="admin-metric metric-pending">
+                <span>Pending</span>
+                <strong><?= $status_counts['Pending'] ?></strong>
+            </div>
+            <div class="admin-metric metric-processing">
+                <span>In progress</span>
+                <strong><?= $status_counts['Processing'] + $status_counts['Approved'] ?></strong>
+            </div>
+            <div class="admin-metric metric-ready">
+                <span>Approved</span>
+                <strong><?= $status_counts['Approved'] ?></strong>
+            </div>
+        </section>
+
+        <section class="admin-queue" aria-labelledby="request-queue-title">
+            <div class="admin-queue-heading">
+                <div>
+                    <p class="admin-eyebrow">Manage submissions</p>
+                    <h2 id="request-queue-title">Request queue</h2>
+                </div>
+                <span><?= $tab_counts['all'] ?> total</span>
+            </div>
 
     <!-- =========================
          SEARCH FILTER
@@ -323,12 +364,8 @@ foreach ($requests as $request) {
          REQUESTS
          ========================= -->
 
-    <h3>
-        Submitted Requests
-    </h3>
-
     <div class="table-wrap">
-        <table class="request-table">
+        <table class="table request-table admin-request-table">
             <thead>
                 <tr>
                     <th>
@@ -647,6 +684,8 @@ foreach ($requests as $request) {
             </tbody>
         </table>
     </div>
+        </section>
+    </main>
 </body>
 </html>
 
