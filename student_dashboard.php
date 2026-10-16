@@ -101,13 +101,29 @@ $statusClasses = [
                     <strong>Student Portal</strong>
                 </span>
             </a>
-            <nav class="student-topbar-actions" aria-label="Student navigation">
-                <a class="student-nav-link" href="track.php">Track Requests</a>
-                <a class="student-nav-link student-new-request" href="request.php">New Request</a>
-                <?php include "./helpers/notification_center.php"; ?>
-                <a href="logout.php" class="logout">Sign out</a>
-            </nav>
-        </div>
+            
+<nav class="student-topbar-actions" aria-label="Student navigation">
+
+    <a class="student-nav-link" href="track.php">
+        Track Requests
+    </a>
+
+    <a class="student-nav-link student-new-request" href="request.php">
+        New Request
+    </a>
+
+    <a class="student-nav-link" href="faq.php">
+        FAQs
+    </a>
+
+    <?php include "./helpers/notification_center.php"; ?>
+
+    <a href="logout.php" class="logout">
+        Sign out
+    </a>
+
+</nav>
+
     </header>
 
     <main class="student-main">
