@@ -159,6 +159,7 @@ $statusClasses = [
             <nav class="student-topbar-actions" aria-label="Student navigation">
                 <a class="student-nav-link" href="track.php">Track Requests</a>
                 <a class="student-nav-link student-new-request" href="request.php">New Request</a>
+                <a class="student-nav-link" href="faq.php">FAQs</a>
                 <?php include "./helpers/notification_center.php"; ?>
                 <a href="logout.php" class="logout">Sign out</a>
             </nav>
@@ -186,6 +187,7 @@ $statusClasses = [
                 <a class="sidebar-link" href="student_dashboard.php" title="Dashboard"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 13a9 9 0 1 1 18 0"/><path d="M12 13l4-4M5 18h14M7 13h.01M17 13h.01"/></svg></span><span class="sidebar-link-text">Dashboard</span></a>
                 <a class="sidebar-link" href="track.php" title="Track Requests"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v5h4M10 12h6M10 16h6"/></svg></span><span class="sidebar-link-text">Track Requests</span></a>
                 <a class="sidebar-link" href="request.php" title="New Request"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h3"/><path d="M17 15v6M14 18h6"/></svg></span><span class="sidebar-link-text">New Request</span></a>
+                <a class="sidebar-link" href="faq.php" title="FAQs"><span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17h.01"/></svg></span><span class="sidebar-link-text">FAQs</span></a>
             </nav>
         </div>
     </aside>
