@@ -80,7 +80,7 @@ $tab_statuses = [
    STUDENT CLASSIFICATION FUNCTIONS
    ========================= */
 
-function getStudentClassification ($year_level) {
+function getStudentClassification (string $year_level) {
     $year_level = strtolower(trim($year_level));
     if (in_array($year_level, ['nursery', 'kindergarten 1', 'kindergarten 2'], true)) {
         return ['Pre-school', 'name' => 'PRE', 'bg_color' => '#e0f7fa', 'border_color' => '#f2fd5a', 'dot_color' => '#f5dc00', 'text_color' => '#a37000'];

@@ -11,6 +11,7 @@ if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
     exit("Access denied. Administrators only.");
 }
 
+
 include("./connection/config.php");
 include("./helpers/SystemOperators.php");
 require_once("./helpers/NotificationService.php");
@@ -20,6 +21,7 @@ $so = new SystemOperators();
 
 $requests = [];
 $search = trim($_GET['search'] ?? $_POST['search'] ?? '');
+$date_filter = trim($_GET['date_filter'] ?? $_POST['date_filter'] ?? '');
 
 /* =========================
    STUDENT CLASSIFICATION FUNCTION
@@ -115,10 +117,11 @@ if ($result = $con->query($query)) {
                 <form class="lookup-panel" method="GET" action="archive.php">
                     <div class="lookup-row">
                         <input type="text" name="search" placeholder="Search archive..." value="<?= htmlspecialchars($search) ?>">
+                        <input type="date" name="date_filter" value="<?= htmlspecialchars($date_filter) ?>" aria-label="Filter by date">
                         <button type="submit">SEARCH</button>
                     </div>
-                    <?php if ($search !== ''): ?>
-                        <a href="archive.php" class="clear-search">Clear Search</a>
+                    <?php if ($search !== '' || $date_filter !== ''): ?>
+                        <a href="archive.php" class="clear-search">Clear Search & Filters</a>
                     <?php endif; ?>
                 </form>
             </div>
@@ -164,6 +167,13 @@ if ($result = $con->query($query)) {
                                 if ($search !== '') {
                                     $search_text = "$file_no $student_no $full_name $year_level $program $doc_type $purpose $claiming_area $status";
                                     if (stripos($search_text, $search) === false) {
+                                        continue;
+                                    }
+                                }
+
+                                if ($date_filter !== '') {
+                                    $request_date = date('Y-m-d', strtotime($request['created_at']));
+                                    if ($request_date !== $date_filter) {
                                         continue;
                                     }
                                 }
