@@ -83,7 +83,12 @@ $tab_statuses = [
 
 function getStudentClassification (string $year_level) {
     $year_level = strtolower(trim($year_level));
-    if (in_array($year_level, ['nursery', 'kindergarten 1', 'kindergarten 2'], true)) {
+    if (in_array($year_level, [
+        'nursery',
+        'kindergarten 1',
+        'kindergarten 2',
+        'kindergarten 2 (preparatory)'
+    ], true)) {
         return ['Pre-school', 'name' => 'PRE', 'bg_color' => '#e0f7fa', 'border_color' => '#f2fd5a', 'dot_color' => '#f5dc00', 'text_color' => '#a37000'];
     } elseif (in_array($year_level, ['grade 1', 'grade 2', 'grade 3', 'grade 4', 'grade 5', 'grade 6'], true)) {
         return ['Grade School', 'name' => 'GS', 'bg_color' => '#f1f8e9', 'border_color' => '#33691e', 'dot_color' => '#0f3600', 'text_color' => '#33691e'];
@@ -91,7 +96,16 @@ function getStudentClassification (string $year_level) {
         return ['Junior High School', 'name' => 'JHS', 'bg_color' => '#fff3e0', 'border_color' => '#e65100', 'dot_color' => '#702700', 'text_color' => '#e65100'];
     } elseif (in_array($year_level, ['grade 11', 'grade 12'], true)) {
         return ['Senior High School', 'name' => 'SHS', 'bg_color' => '#fce4ec', 'border_color' => '#e9007c', 'dot_color' => '#880e4f', 'text_color' => '#880e4f'];
-    } elseif (in_array($year_level, ['1st year', '2nd year', '3rd year', '4th year'], true)) {
+    } elseif (in_array($year_level, [
+        '1st year',
+        '2nd year',
+        '3rd year',
+        '4th year',
+        '1st year (college)',
+        '2nd year (college)',
+        '3rd year (college)',
+        '4th year (college)'
+    ], true)) {
         return ['Tertiary Education', 'name' => 'TED', 'bg_color' => '#e8f5e9', 'border_color' => '#a5a5a5', 'dot_color' => '#3d3d3d', 'text_color' => '#2e7d32'];
     } elseif (in_array($year_level, ['alumni'], true)) {
         return ['Alumni', 'name' => 'AM', 'bg_color' => '#f5f5f5', 'border_color' => '#b135e2', 'dot_color' => '#420034', 'text_color' => '#f1f1f1'];
