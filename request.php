@@ -152,11 +152,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnRegister'])) {$raw
                 </div>
                 <div class="form-items">
                     <label>Year Level:</label>
-                    <input type="text" name="year_level" placeholder="3rd Year, 4th Year, etc., N/A if not applicable">
+                    <select name="year_level">
+                        <option value="" selected>Select year level</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="Kindergarten 1">Kindergarten 1</option>
+                        <option value="Kindergarten 2 (Preparatory)">Kindergarten 2 (Preparatory)</option>
+                        <option value="Grade 1">Grade 1</option>
+                        <option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option>
+                        <option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 6">Grade 6</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Grade 9">Grade 9</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Grade 11">Grade 11</option>
+                        <option value="Grade 12">Grade 12</option>
+                        <option value="1st year (College)">1st year (College)</option>
+                        <option value="2nd year (College)">2nd year (College)</option>
+                        <option value="3rd year (College)">3rd year (College)</option>
+                        <option value="4th year (College)">4th year (College)</option>
+                        <option value="Alumni">Alumni</option>
+                        <option value="N/A">N/A</option>
+                    </select>
                 </div>
                 <div class="form-items">
                     <label>Degree Program / Course:</label>
-                    <input type="text" name="program" required placeholder="BSIT, BSN, BSBA, etc., N/A if not applicable">
+                    <select name="program" required>
+                        <option value="" disabled selected>Select degree program / course</option>
+                        <option value="Bachelor of Science in Information Technology (BSIT)">Bachelor of Science in Information Technology (BSIT)</option>
+                        <option value="Bachelor of Multimedia Arts (BMMA)">Bachelor of Multimedia Arts (BMMA)</option>
+                        <option value="Bachelor of Science in Business Administration (BSBA)">Bachelor of Science in Business Administration (BSBA)</option>
+                        <option value="Bachelor of Science in Tourism Management (BSTM)">Bachelor of Science in Tourism Management (BSTM)</option>
+                        <option value="Bachelor of Science in Hospitality Management (BSHM)">Bachelor of Science in Hospitality Management (BSHM)</option>
+                    </select>
                 </div>
                 <div class="form-items">
                     <label>Email:</label>
@@ -176,6 +206,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnRegister'])) {$raw
                         <option value="Form 137 / Transcript">Form 137 / Transcript</option>
                         <option value="Diploma">Diploma</option>
                         <option value="Health Record">Health Record</option>
+                        <option value="Good Moral Certificate">Good Moral Certificate</option>
+                        <option value="Certificate of Transfer Credentials">Certificate of Transfer Credentials</option>
+                        <option value="Certificate of Units Earned">Certificate of Units Earned</option>
+                        <option value="Certificate of Honorable Dismissal">Certificate of Honorable Dismissal</option>
+                        <option value="Certificate of Candidacy for Graduation">Certificate of Candidacy for Graduation</option>
+                        <option value="Certified True Copy">Certified True Copy</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="form-items">
