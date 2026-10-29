@@ -1951,9 +1951,22 @@ body.admin-dashboard-page {
     background: #f0f7f3;
 }
 
-.admin-dashboard-page .admin-request-table td.claiming-area-cell {
-    background: #fff6c8;
+.admin-dashboard-page .admin-request-table tr.status-pending td.claiming-area-cell {
+    background: #fce15b;
 }
+
+.admin-dashboard-page .admin-request-table tr.status-processing td.claiming-area-cell {
+    background: #59b4fa;
+}
+
+.admin-dashboard-page .admin-request-table tr.status-ready-for-claiming td.claiming-area-cell {
+    background: #33e9c4;
+}
+
+.admin-dashboard-page .admin-request-table tr.status-approved td.claiming-area-cell {
+    background: #269235;
+}
+
 
 .admin-dashboard-page .request-form {
     min-width: 150px;
