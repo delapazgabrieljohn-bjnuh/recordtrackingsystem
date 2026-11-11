@@ -172,6 +172,20 @@ body:has(.container) {
     .form-container { width: 100% !important; min-width: 100% !important; }
     .image-container { display: none !important; }
 }
+
+.form-box.signup {
+    width: 100% !important;
+    max-width: 450px !important;
+}
+
+.form-box.signup .title::after {
+    content: "Create your new account" !important;
+    display: block !important;
+    font-size: 1.1rem !important;
+    font-weight: 400 !important;
+    color: #E2E8F0 !important;
+    margin-top: 10px !important;
+}
 /* End of Login Page Styles */
 
 .dashboard-header {
