@@ -217,7 +217,7 @@ $con = connection();
     </style>
 </head>
 
-<body class="student-dashboard-page">
+<body class="student-dashboard-page sidebar-collapsed">
 
     <!-- Student Portal Header -->
     <header class="student-topbar">
@@ -264,9 +264,135 @@ $con = connection();
 </nav>
         </div>
     </header>
+        
+    <!-- Student Dashboard Sidebar -->
+    <aside class="dashboard-sidebar student-sidebar"
+           id="dashboardSidebar"
+           aria-label="Student navigation">
 
-    <!-- FAQ Main Content -->
-    <main class="faq-main">
+        <div class="dashboard-sidebar-brand">
+
+            <a class="student-brand"
+               href="student_dashboard.php"
+               aria-label="FEU Roosevelt student portal home">
+
+                <span class="brand-mark" aria-hidden="true">FR</span>
+
+                <span class="brand-copy">
+                    <span>FEU ROOSEVELT</span>
+                    <strong>Student Portal</strong>
+                </span>
+
+            </a>
+
+            <button class="sidebar-toggle"
+                    id="sidebarToggle"
+                    type="button"
+                    aria-controls="dashboardSidebar"
+                    aria-expanded="false"
+                    aria-label="Expand sidebar">
+                &rsaquo;
+            </button>
+
+        </div>
+
+        <div class="dashboard-sidebar-content">
+
+            <!-- Sidebar Search -->
+            <label class="sidebar-search">
+
+                <span class="sidebar-search-icon"
+                      aria-hidden="true"></span>
+
+                <input id="sidebarSearch"
+                       type="search"
+                       aria-label="Search navigation"
+                       placeholder="Search">
+
+            </label>
+
+            <p class="sidebar-label">Main menu</p>
+
+            <nav>
+
+                <!-- Dashboard -->
+                <a class="sidebar-link"
+                   href="student_dashboard.php"
+                   title="Dashboard">
+
+                    <span class="sidebar-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 13a9 9 0 1 1 18 0"/>
+                            <path d="M12 13l4-4M5 18h14M7 13h.01M17 13h.01"/>
+                        </svg>
+                    </span>
+
+                    <span class="sidebar-link-text">Dashboard</span>
+
+                </a>
+
+                <!-- Track Requests -->
+                <a class="sidebar-link"
+                   href="track.php"
+                   title="Track Requests">
+
+                    <span class="sidebar-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7 3h8l4 4v14H7z"/>
+                            <path d="M15 3v5h4M10 12h6M10 16h6"/>
+                        </svg>
+                    </span>
+
+                    <span class="sidebar-link-text">Track Requests</span>
+
+                </a>
+
+                <!-- New Request -->
+                <a class="sidebar-link"
+                   href="request.php"
+                   title="New Request">
+
+                    <span class="sidebar-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 4h12v16H6zM9 8h6M9 12h3"/>
+                            <path d="M17 15v6M14 18h6"/>
+                        </svg>
+                    </span>
+
+                    <span class="sidebar-link-text">New Request</span>
+
+                </a>
+
+                <!-- FAQs - Active Page -->
+                <a class="sidebar-link active"
+                   href="faq.php"
+                   title="FAQs"
+                   aria-current="page">
+
+                    <span class="sidebar-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7"/>
+                            <path d="M12 17h.01"/>
+                        </svg>
+                    </span>
+
+                    <span class="sidebar-link-text">FAQs</span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+    </aside>
+
+         
+     
+       <!-- FAQ Main Content -->
+          <main class="student-main">
+
+    <div class="faq-main">
 
         <section class="faq-hero" aria-labelledby="faq-title">
 
@@ -708,13 +834,70 @@ $con = connection();
                 </a>
             </div>
 
-        </section>
-
+        </div>
     </main>
 
+    
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
     </script>
 
+    <script>
+        // Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        if (sidebarToggle) {
+
+            sidebarToggle.addEventListener('click', () => {
+
+                document.body.classList.toggle('sidebar-collapsed');
+
+                const isCollapsed =
+                    document.body.classList.contains('sidebar-collapsed');
+
+                sidebarToggle.setAttribute(
+                    'aria-expanded',
+                    String(!isCollapsed)
+                );
+
+                sidebarToggle.setAttribute(
+                    'aria-label',
+                    isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
+                );
+
+                sidebarToggle.innerHTML =
+                    isCollapsed ? '&rsaquo;' : '&lsaquo;';
+
+            });
+
+        }
+
+
+        // Sidebar Navigation Search
+        const sidebarSearch = document.getElementById('sidebarSearch');
+
+        if (sidebarSearch) {
+
+            sidebarSearch.addEventListener('input', (event) => {
+
+                const searchText = event.target.value.toLowerCase();
+
+                document.querySelectorAll(
+                    '#dashboardSidebar .sidebar-link'
+                ).forEach((link) => {
+
+                    link.hidden = !link.textContent
+                        .toLowerCase()
+                        .includes(searchText);
+
+                });
+
+            });
+
+        }
+
+    </script>
+
 </body>
 </html>
+
