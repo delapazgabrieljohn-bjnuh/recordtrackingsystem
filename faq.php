@@ -217,7 +217,9 @@ $con = connection();
     </style>
 </head>
 
+
 <body class="student-dashboard-page sidebar-collapsed">
+<body class="student-dashboard-page student-sidebar-page sidebar-collapsed">
 
     <!-- Student Portal Header -->
     <header class="student-topbar">
@@ -246,7 +248,7 @@ $con = connection();
         Track Requests
     </a>
 
-    <a class="student-nav-link student-new-request" href="request.php">
+    <a class="student-nav-link" href="request.php">
         New Request
     </a>
 

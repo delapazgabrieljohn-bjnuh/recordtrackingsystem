@@ -31,6 +31,7 @@ $saved_request_id = filter_input(
 ) ?: null;
 $requests = [];
 $follow_up_messages = [];
+$date_filter = trim($_GET['date_filter'] ?? $_POST['date_filter'] ?? '');
 
 $con->query("CREATE TABLE IF NOT EXISTS follow_up_messages (
     id INT NOT NULL AUTO_INCREMENT,
@@ -76,14 +77,25 @@ $tab_statuses = [
     'approved' => 'Approved',
     'ready for_claiming' => 'Ready for Claiming'
 ];
+$claiming_areas = [
+    'Pending Registrar Assignment',
+    'Marikina',
+    'Cainta',
+    'Rodriguez'
+];
 
 /* =========================
    STUDENT CLASSIFICATION FUNCTIONS
    ========================= */
 
-function getStudentClassification ($year_level) {
+function getStudentClassification (string $year_level) {
     $year_level = strtolower(trim($year_level));
-    if (in_array($year_level, ['nursery', 'kindergarten 1', 'kindergarten 2'], true)) {
+    if (in_array($year_level, [
+        'nursery',
+        'kindergarten 1',
+        'kindergarten 2',
+        'kindergarten 2 (preparatory)'
+    ], true)) {
         return ['Pre-school', 'name' => 'PRE', 'bg_color' => '#e0f7fa', 'border_color' => '#f2fd5a', 'dot_color' => '#f5dc00', 'text_color' => '#a37000'];
     } elseif (in_array($year_level, ['grade 1', 'grade 2', 'grade 3', 'grade 4', 'grade 5', 'grade 6'], true)) {
         return ['Grade School', 'name' => 'GS', 'bg_color' => '#f1f8e9', 'border_color' => '#33691e', 'dot_color' => '#0f3600', 'text_color' => '#33691e'];
@@ -91,9 +103,18 @@ function getStudentClassification ($year_level) {
         return ['Junior High School', 'name' => 'JHS', 'bg_color' => '#fff3e0', 'border_color' => '#e65100', 'dot_color' => '#702700', 'text_color' => '#e65100'];
     } elseif (in_array($year_level, ['grade 11', 'grade 12'], true)) {
         return ['Senior High School', 'name' => 'SHS', 'bg_color' => '#fce4ec', 'border_color' => '#e9007c', 'dot_color' => '#880e4f', 'text_color' => '#880e4f'];
-    } elseif (in_array($year_level, ['1st year', '2nd year', '3rd year', '4th year'], true)) {
+    } elseif (in_array($year_level, [
+        '1st year',
+        '2nd year',
+        '3rd year',
+        '4th year',
+        '1st year (college)',
+        '2nd year (college)',
+        '3rd year (college)',
+        '4th year (college)'
+    ], true)) {
         return ['Tertiary Education', 'name' => 'TED', 'bg_color' => '#e8f5e9', 'border_color' => '#a5a5a5', 'dot_color' => '#3d3d3d', 'text_color' => '#2e7d32'];
-    } elseif (in_array($year_level, ['Alumni'], true)) {
+    } elseif (in_array($year_level, ['alumni'], true)) {
         return ['Alumni', 'name' => 'AM', 'bg_color' => '#f5f5f5', 'border_color' => '#b135e2', 'dot_color' => '#420034', 'text_color' => '#f1f1f1'];
     } else {
         return ['Unknown', 'name' => 'N/A', 'bg_color' => '#ffffff', 'border_color' => '#030303', 'dot_color' => '#ffffff', 'text_color' => '#0c0c0c'];
@@ -146,7 +167,7 @@ if (
         $request_id &&
         $request_id > 0 &&
         in_array($status, $allowed_statuses, true) &&
-        $claiming_area !== ''
+        in_array($claiming_area, $claiming_areas, true)
     ) {
 
         $lookup = $con->prepare(
@@ -325,6 +346,10 @@ foreach ($requests as $request) {
                 </span>
             </a>
             <div class="admin-topbar-actions">
+                <nav class="admin-topbar-nav" aria-label="Admin navigation">
+                    <a class="admin-nav-link" href="admin_dashboard.php" aria-current="page">Dashboard</a>
+                    <a class="admin-nav-link" href="archive.php">Archive</a>
+                </nav>
                 <?php include("./helpers/notification_center.php"); ?>
                 <a href="logout.php" class="admin-logout">Sign out</a>
             </div>
@@ -448,6 +473,7 @@ foreach ($requests as $request) {
                     placeholder="Search requests..."
                     value="<?= htmlspecialchars($search) ?>"
                 >
+                <input type="date" name="date_filter" value="<?= htmlspecialchars($date_filter) ?>" aria-label="Filter by date">
                 <input type="hidden" name="tab" value="<?= htmlspecialchars($current_tab) ?>">
 
                 <button type="submit">
@@ -455,12 +481,12 @@ foreach ($requests as $request) {
                 </button>
             </div>
 
-            <?php if ($search !== ''): ?>
+            <?php if ($search !== '' || $date_filter !== ''): ?>
                 <a
                     href="admin_dashboard.php?<?= http_build_query(['tab' => $current_tab]) ?>"
                     class="clear-search"
                 >
-                    Clear Search
+                    Clear Search & Filter
                 </a>
             <?php endif; ?>
         </form>
@@ -681,6 +707,14 @@ foreach ($requests as $request) {
                         }
 
 
+                        if ($date_filter !== '') {
+                                    $request_date = date('Y-m-d', strtotime($request['created_at']));
+                                    if ($request_date !== $date_filter) {
+                                        continue;
+                                    }
+                                }
+
+
                         $displayed_requests++;
 
                         /* =========================
@@ -766,17 +800,21 @@ foreach ($requests as $request) {
 
                             <!-- CLAIMING AREA -->
                             <td class="claiming-area-cell">
-                                <input
+                                <select
                                     class="request-area"
-                                    type="text"
                                     name="claiming_area"
                                     form="<?= $form_id ?>"
-                                    placeholder="Claiming area"
-                                    value="<?= htmlspecialchars(
-                                        $claiming_area
-                                    ) ?>"
                                     required
                                 >
+                                    <?php foreach ($claiming_areas as $area): ?>
+                                        <option
+                                            value="<?= htmlspecialchars($area, ENT_QUOTES, 'UTF-8') ?>"
+                                            <?= $claiming_area === $area ? 'selected' : '' ?>
+                                        >
+                                            <?= htmlspecialchars($area, ENT_QUOTES, 'UTF-8') ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </td>
 
                             <!-- STATUS -->
@@ -934,7 +972,7 @@ foreach ($requests as $request) {
                 statusSelect.addEventListener('change', markChanged);
             }
             if (claimingArea) {
-                claimingArea.addEventListener('input', markChanged);
+                claimingArea.addEventListener('change', markChanged);
             }
         });
 
