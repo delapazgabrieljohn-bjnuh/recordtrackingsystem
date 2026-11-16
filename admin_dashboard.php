@@ -949,6 +949,29 @@ foreach ($requests as $request) {
         <p class="print-disclaimer">This printout summarizes the request; it is not a copy of the requested record.</p>
     </section>
     <script>
+        const requestTabScrollKey = 'adminDashboardRequestTabScrollY';
+        const savedRequestTabScroll = sessionStorage.getItem(requestTabScrollKey);
+        if (savedRequestTabScroll !== null) {
+            sessionStorage.removeItem(requestTabScrollKey);
+            window.addEventListener('pageshow', () => {
+                window.scrollTo(0, Number(savedRequestTabScroll));
+            }, { once: true });
+        }
+
+        document.querySelectorAll('.request-tab').forEach((tab) => {
+            tab.addEventListener('click', (event) => {
+                if (
+                    event.button === 0 &&
+                    !event.metaKey &&
+                    !event.ctrlKey &&
+                    !event.shiftKey &&
+                    !event.altKey
+                ) {
+                    sessionStorage.setItem(requestTabScrollKey, String(window.scrollY));
+                }
+            });
+        });
+
         document.querySelectorAll('.request-form').forEach((form) => {
             const row = form.closest('tr');
             const indicator = form.querySelector('.save-indicator');
