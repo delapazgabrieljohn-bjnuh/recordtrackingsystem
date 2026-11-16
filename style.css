@@ -2719,38 +2719,55 @@ body.admin-dashboard-page.archive-page main.admin-main {
 
 /* Collapsed sidebar */
 body.admin-dashboard-page.archive-page.sidebar-collapsed aside#dashboardSidebar {
-    width: 76px !important;
-    min-width: 76px !important;
+    width: 100px !important;
+    min-width: 100px !important;
 }
 
 body.admin-dashboard-page.archive-page.sidebar-collapsed #dashboardSidebar .admin-brand-copy,
 body.admin-dashboard-page.archive-page.sidebar-collapsed #dashboardSidebar .sidebar-label,
-body.admin-dashboard-page.archive-page.sidebar-collapsed #dashboardSidebar .sidebar-search,
-body.admin-dashboard-page.archive-page.sidebar-collapsed #dashboardSidebar .sidebar-link-text {
+body.admin-dashboard-page.archive-page.sidebar-collapsed #dashboardSidebar .sidebar-search {
     display: none !important;
 }
 
 body.admin-dashboard-page.archive-page.sidebar-collapsed main.admin-main {
-    width: calc(100% - 124px) !important;
-    margin-left: 108px !important;
+    width: calc(100% - 148px) !important;
+    margin-left: 132px !important;
 }
 
 /* Mobile */
 @media (max-width: 760px) {
     body.admin-dashboard-page.archive-page aside#dashboardSidebar {
-        width: 76px !important;
-        min-width: 76px !important;
+        width: 100px !important;
+        min-width: 100px !important;
     }
 
     body.admin-dashboard-page.archive-page #dashboardSidebar .admin-brand-copy,
     body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-label,
-    body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-search,
-    body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-link-text {
+    body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-search {
         display: none !important;
     }
 
+    body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-link {
+        justify-content: center !important;
+        flex-direction: column !important;
+        gap: 3px !important;
+        min-height: 70px !important;
+        padding: 6px 3px !important;
+        text-align: center !important;
+    }
+
+    body.admin-dashboard-page.archive-page #dashboardSidebar .sidebar-link-text {
+        display: block !important;
+        max-width: 88px;
+        color: #16833b !important;
+        font-size: .7rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+    }
+
     body.admin-dashboard-page.archive-page main.admin-main {
-        width: calc(100% - 124px) !important;
-        margin-left: 108px !important;
+        width: calc(100% - 148px) !important;
+        margin-left: 132px !important;
     }
 }

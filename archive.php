@@ -257,13 +257,12 @@ if ($result = $con->query($query)) {
            ================================= */
 
         body.admin-dashboard-page.archive-page.sidebar-collapsed .dashboard-sidebar {
-            width: 76px !important;
+            width: 100px !important;
         }
 
         body.admin-dashboard-page.archive-page.sidebar-collapsed .dashboard-sidebar-brand .admin-brand-copy,
         body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-label,
-        body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-search,
-        body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-link-text {
+        body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-search {
             display: none !important;
         }
 
@@ -274,11 +273,26 @@ if ($result = $con->query($query)) {
 
         body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-link {
             justify-content: center;
+            flex-direction: column;
+            gap: 3px;
+            min-height: 70px;
+            padding: 6px 3px;
+            text-align: center;
+        }
+
+        body.admin-dashboard-page.archive-page.sidebar-collapsed .sidebar-link-text {
+            display: block !important;
+            max-width: 88px;
+            color: #16833b;
+            font-size: .7rem;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: normal;
         }
 
         body.admin-dashboard-page.archive-page.sidebar-collapsed .admin-main {
-            margin-left: 76px !important;
-            width: calc(100% - 76px) !important;
+            margin-left: 100px !important;
+            width: calc(100% - 100px) !important;
         }
 
         /* =================================
@@ -287,25 +301,43 @@ if ($result = $con->query($query)) {
 
         @media (max-width: 768px) {
             body.admin-dashboard-page.archive-page .dashboard-sidebar {
-                width: 76px !important;
+                width: 100px !important;
             }
 
             body.admin-dashboard-page.archive-page .dashboard-sidebar .admin-brand-copy,
             body.admin-dashboard-page.archive-page .sidebar-label,
-            body.admin-dashboard-page.archive-page .sidebar-search,
-            body.admin-dashboard-page.archive-page .sidebar-link-text {
+            body.admin-dashboard-page.archive-page .sidebar-search {
                 display: none !important;
             }
 
+            body.admin-dashboard-page.archive-page .sidebar-link {
+                justify-content: center;
+                flex-direction: column;
+                gap: 3px;
+                min-height: 70px;
+                padding: 6px 3px;
+                text-align: center;
+            }
+
+            body.admin-dashboard-page.archive-page .sidebar-link-text {
+                display: block !important;
+                max-width: 88px;
+                color: #16833b;
+                font-size: .7rem;
+                font-weight: 600;
+                line-height: 1.2;
+                white-space: normal;
+            }
+
             body.admin-dashboard-page.archive-page .admin-main {
-                margin-left: 76px !important;
-                width: calc(100% - 76px) !important;
+                margin-left: 100px !important;
+                width: calc(100% - 100px) !important;
             }
         }
     </style>
 </head>
 
-<body class="admin-dashboard-page archive-page">
+<body class="admin-dashboard-page archive-page sidebar-collapsed">
 
     <!-- TOP HEADER -->
     <header class="admin-topbar">
@@ -383,10 +415,10 @@ if ($result = $con->query($query)) {
                     id="sidebarToggle"
                     type="button"
                     aria-controls="dashboardSidebar"
-                    aria-expanded="true"
-                    aria-label="Collapse sidebar">
+                    aria-expanded="false"
+                    aria-label="Expand sidebar">
 
-                &lsaquo;
+                &rsaquo;
 
             </button>
 
