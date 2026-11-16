@@ -171,7 +171,7 @@ if (
     ) {
 
         $lookup = $con->prepare(
-            "SELECT id, email, file_no, status, claiming_area
+            "SELECT id, user_id, email, file_no, status, claiming_area
              FROM document_requests
              WHERE id = ?"
         );
