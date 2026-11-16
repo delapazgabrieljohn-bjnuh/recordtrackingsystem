@@ -247,6 +247,9 @@ if (
                 if ($search !== '') {
                     $redirect_params['search'] = $search;
                 }
+                if ($date_filter !== '') {
+                    $redirect_params['date_filter'] = $date_filter;
+                }
                 header('Location: admin_dashboard.php?' . http_build_query($redirect_params));
                 exit;
             } catch (Throwable $error) {
@@ -499,9 +502,14 @@ foreach ($requests as $request) {
             if ($search !== '') {
                 $tab_url['search'] = $search;
             }
+            if ($date_filter !== '') {
+                $tab_url['date_filter'] = $date_filter;
+            }
             ?>
             <a
                 class="request-tab<?= $current_tab === $tab_key ? ' active' : '' ?>"
+                data-tab="<?= htmlspecialchars($tab_key, ENT_QUOTES, 'UTF-8') ?>"
+                data-status="<?= htmlspecialchars($tab_statuses[$tab_key] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                 href="admin_dashboard.php?<?= htmlspecialchars(http_build_query($tab_url), ENT_QUOTES, 'UTF-8') ?>"
                 <?= $current_tab === $tab_key ? 'aria-current="page"' : '' ?>
             ><?= htmlspecialchars($tab_label, ENT_QUOTES, 'UTF-8') ?> (<?= $tab_counts[$tab_key] ?>)</a>
@@ -579,6 +587,7 @@ foreach ($requests as $request) {
                     <tr>
                         <td
                             class="empty-requests"
+                            id="request-empty-state"
                             colspan="10"
                         >
                             No document requests
@@ -667,14 +676,8 @@ foreach ($requests as $request) {
                                 $request['status']
                             ) ?: 'Pending';
                         $is_saved_request = $saved_request_id === (int)$request['id'];
-
-                        if (
-                            $current_tab !== 'all' &&
-                            $status !== $tab_statuses[$current_tab]
-                        ) {
-                            continue;
-                        }
-                        $tab_filtered_count++;
+                        $matches_current_tab = $current_tab === 'all' ||
+                            $status === $tab_statuses[$current_tab];
 
 
                         /* =========================
@@ -716,6 +719,9 @@ foreach ($requests as $request) {
 
 
                         $displayed_requests++;
+                        if ($matches_current_tab) {
+                            $tab_filtered_count++;
+                        }
 
                         /* =========================
                            FORM ID
@@ -727,7 +733,11 @@ foreach ($requests as $request) {
 
                     ?>
 
-                        <tr>
+                        <tr
+                            class="admin-request-row"
+                            data-request-status="<?= htmlspecialchars($status, ENT_QUOTES, 'UTF-8') ?>"
+                            <?= $matches_current_tab ? '' : 'hidden' ?>
+                        >
                             <!-- REF NO. -->
                             <td>
                                 <strong>
@@ -832,6 +842,7 @@ foreach ($requests as $request) {
                                     >
                                     <input type="hidden" name="tab" value="<?= htmlspecialchars($current_tab) ?>">
                                     <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                                    <input type="hidden" name="date_filter" value="<?= htmlspecialchars($date_filter) ?>">
 
                                     <div class="save-indicator-row">
                                         <span
@@ -910,18 +921,18 @@ foreach ($requests as $request) {
                         </tr>
                     <?php endforeach; ?>
 
-                    <?php if ($displayed_requests === 0): ?>
-                        <tr>
-                            <td
-                                class="empty-requests"
-                                colspan="10"
-                            >
-                                <?= $search !== ''
-                                    ? 'No requests match your search.'
-                                    : 'No requests in this tab.' ?>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
+                    <tr>
+                        <td
+                            class="empty-requests"
+                            id="request-empty-state"
+                            colspan="10"
+                            <?= $tab_filtered_count > 0 ? 'hidden' : '' ?>
+                        >
+                            <?= $displayed_requests === 0 && ($search !== '' || $date_filter !== '')
+                                ? 'No requests match your search.'
+                                : 'No requests in this tab.' ?>
+                        </td>
+                    </tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -949,26 +960,48 @@ foreach ($requests as $request) {
         <p class="print-disclaimer">This printout summarizes the request; it is not a copy of the requested record.</p>
     </section>
     <script>
-        const requestTabScrollKey = 'adminDashboardRequestTabScrollY';
-        const savedRequestTabScroll = sessionStorage.getItem(requestTabScrollKey);
-        if (savedRequestTabScroll !== null) {
-            sessionStorage.removeItem(requestTabScrollKey);
-            window.addEventListener('pageshow', () => {
-                window.scrollTo(0, Number(savedRequestTabScroll));
-            }, { once: true });
-        }
+        const requestTabs = document.querySelectorAll('.request-tab');
+        const requestRows = document.querySelectorAll('.admin-request-row');
+        const requestEmptyState = document.getElementById('request-empty-state');
 
-        document.querySelectorAll('.request-tab').forEach((tab) => {
+        requestTabs.forEach((tab) => {
             tab.addEventListener('click', (event) => {
                 if (
-                    event.button === 0 &&
-                    !event.metaKey &&
-                    !event.ctrlKey &&
-                    !event.shiftKey &&
-                    !event.altKey
+                    event.button !== 0 ||
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey
                 ) {
-                    sessionStorage.setItem(requestTabScrollKey, String(window.scrollY));
+                    return;
                 }
+                event.preventDefault();
+
+                const selectedTab = tab.dataset.tab;
+                let visibleRows = 0;
+                requestRows.forEach((row) => {
+                    const matchesTab = selectedTab === 'all' ||
+                        row.dataset.requestStatus === tab.dataset.status;
+                    row.hidden = !matchesTab;
+                    if (matchesTab) {
+                        visibleRows++;
+                    }
+                });
+
+                requestEmptyState.hidden = visibleRows > 0;
+                requestTabs.forEach((requestTab) => {
+                    const isActive = requestTab === tab;
+                    requestTab.classList.toggle('active', isActive);
+                    if (isActive) {
+                        requestTab.setAttribute('aria-current', 'page');
+                    } else {
+                        requestTab.removeAttribute('aria-current');
+                    }
+                });
+                document.querySelectorAll('input[name="tab"]').forEach((input) => {
+                    input.value = selectedTab;
+                });
+                window.history.replaceState(null, '', tab.href);
             });
         });
 
